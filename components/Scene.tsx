@@ -30,7 +30,7 @@ export function Scene() {
           stencil:         false,
           depth:           false,
         }}
-        dpr={[1, 1.5]}
+        dpr={[0.8, 1.2]}
         style={{ background: '#050505' }}
       >
         <AdaptiveDpr pixelated />

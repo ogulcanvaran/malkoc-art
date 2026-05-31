@@ -28,7 +28,7 @@ export function LiquidMetalMaterial({ mousePos }: LiquidMetalMaterialProps) {
   const geometry = useMemo(() => new THREE.PlaneGeometry(
     viewport.width  + 0.5,
     viewport.height + 0.5,
-    240, 240
+    180, 180  // 180 vs 240 — %43 daha az vertex, görsel fark yok
   ), [viewport.width, viewport.height]);
 
   useFrame(({ clock }) => {

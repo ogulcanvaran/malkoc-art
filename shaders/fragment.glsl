@@ -5,16 +5,13 @@ uniform float uMousePower;
 varying vec2  vUv;
 varying vec3  vNormal;
 varying float vElevation;
-varying float vGradient;   // fold edge steepness
-varying float vCurvature;  // surface laplacian
-
-// ── PBR helpers ──────────────────────────────────────────────────────────────
+varying float vGradient;
 
 float GGX(vec3 N, vec3 H, float roughness) {
-  float a    = roughness * roughness;
-  float NdH  = max(dot(N, H), 0.0);
+  float a     = roughness * roughness;
+  float NdH   = max(dot(N, H), 0.0);
   float denom = NdH * NdH * (a * a - 1.0) + 1.0;
-  return (a * a) / (3.14159265 * denom * denom + 1e-5);
+  return (a * a) / (3.14159 * denom * denom + 1e-5);
 }
 
 float schlick(float cosA, float F0) {
@@ -27,69 +24,45 @@ void main() {
   float NdV = max(dot(N, V), 0.0);
   float e   = vElevation;
 
-  // ── Base surface: erimiş siyah metal / obsidyen ──────────────────────────────
-  vec3 cAbyss  = vec3(0.005, 0.004, 0.007); // derin vadi — saf siyah
-  vec3 cBody   = vec3(0.020, 0.018, 0.028); // yüzey gövdesi — koyu lacivert-siyah
-  vec3 cSwell  = vec3(0.045, 0.040, 0.065); // kabarık bölge — görünür ama koyu
+  // Derin siyah — obsidyen / erimiş metal
+  vec3 col  = mix(vec3(0.006, 0.005, 0.008),
+                  vec3(0.038, 0.034, 0.052),
+                  smoothstep(-0.20, 0.35, e));
 
-  float tBody  = smoothstep(-0.20, 0.06, e);
-  float tSwell = smoothstep( 0.04, 0.38, e);
+  // Key light — mouse'la kayar
+  vec2  mOff   = (uMousePos - 0.5) * 0.55;
+  vec3  keyDir = normalize(vec3(-0.55 + mOff.x, 0.85 + mOff.y, 1.0));
+  float NdK    = max(dot(N, keyDir), 0.0);
+  vec3  H_key  = normalize(keyDir + V);
 
-  vec3 albedo  = mix(cAbyss, cBody,  tBody);
-  albedo       = mix(albedo, cSwell, tSwell);
+  // Diffuse — fold geometrisi okunur
+  col += col * NdK * 0.55;
 
-  // ── Işık yönleri ─────────────────────────────────────────────────────────────
-  vec2  mOff    = (uMousePos - 0.5) * 0.55;
-  vec3  keyDir  = normalize(vec3(-0.55 + mOff.x,  0.85 + mOff.y, 1.0));
-  vec3  fillDir = normalize(vec3( 0.65,           -0.40,          0.75));
-  vec3  rimDir  = normalize(vec3(-0.30,            0.20,          0.60));
+  // Specular 1 — mirror flash (cıva / krom)
+  col += vec3(1.00, 0.97, 0.93) * GGX(N, H_key, 0.038) * NdK * 1.30;
 
-  float NdK = max(dot(N, keyDir),  0.0);
-  float NdF = max(dot(N, fillDir), 0.0);
+  // Specular 2 — geniş fold glow
+  col += vec3(0.85, 0.90, 1.00) * GGX(N, H_key, 0.110) * NdK * 0.50;
 
-  // ── Specular katmanları — üç farklı roughness → zengin yansıma ───────────────
-  // 1) Ultra-tight mirror highlight (çok parlak küçük nokta — cıva damlası gibi)
-  float spec1 = GGX(N, normalize(keyDir  + V), 0.032) * NdK * 1.40;
-  // 2) Medium spread (fold tepeleri boyunca uzanan parlaklık)
-  float spec2 = GGX(N, normalize(keyDir  + V), 0.090) * NdK * 0.55;
-  // 3) Fill soft highlight (ikincil kaynaktan gelen yansıma)
-  float spec3 = GGX(N, normalize(fillDir + V), 0.120) * NdF * 0.28;
+  // Fill light
+  vec3  fillDir = normalize(vec3(0.60, -0.35, 0.80));
+  float NdF     = max(dot(N, fillDir), 0.0);
+  col += vec3(0.75, 0.82, 1.00) * GGX(N, normalize(fillDir+V), 0.130) * NdF * 0.22;
 
-  // ── Caustic simülasyonu ───────────────────────────────────────────────────────
-  // Işık konkav yüzeylerden geçerken odaklanır → parlak çizgiler
-  // Pozitif laplacian = konkav = ışık toplama noktası
-  float causticRaw  = max(vCurvature * 0.018, 0.0);
-  float caustic     = pow(causticRaw, 1.6) * NdK * 2.50;
-  // Caustic rengi: soğuk mavi-beyaz (erimiş metal ışık oyunu)
-  vec3  causticCol  = mix(vec3(0.75, 0.82, 1.00), vec3(1.0), causticRaw * 2.0);
+  // Fold edge lines — vGradient yüksek olduğu yerlerde ince parlak çizgi
+  float edgeLine = smoothstep(0.55, 1.20, vGradient) * GGX(N, H_key, 0.022) * NdK;
+  col += vec3(1.00, 0.95, 0.88) * edgeLine * 0.75;
 
-  // ── Fold edge highlight (kostik çizgiler) ─────────────────────────────────────
-  // Yüksek gradyan = fold kenarı = ince parlak çizgi
-  float edgeFactor  = smoothstep(12.0, 28.0, vGradient * 180.0);
-  float edgeSpec    = GGX(N, normalize(keyDir + V), 0.018) * NdK;
-  float edgeLine    = edgeFactor * edgeSpec * 0.90;
+  // Fresnel rim
+  col += vec3(0.50, 0.58, 0.78) * schlick(NdV, 0.04) * 0.25;
 
-  // ── Fresnel — sıvı yüzey kenarlarında rim glow ───────────────────────────────
-  float fres = schlick(NdV, 0.04) * 0.32;
-
-  // ── Kompozisyon ─────────────────────────────────────────────────────────────
-  vec3 col  = albedo * (0.22 + NdK * 0.28 + NdF * 0.08); // diffuse — fold okunur
-  col      += vec3(1.00, 0.98, 0.95) * spec1;              // mirror highlight
-  col      += vec3(0.90, 0.92, 1.00) * spec2;              // spread glow
-  col      += vec3(0.80, 0.86, 1.00) * spec3;              // fill reflection
-  col      += causticCol             * caustic;             // caustic focus lines
-  col      += vec3(1.00, 0.96, 0.90) * edgeLine;           // fold edge bright line
-  col      += vec3(0.55, 0.62, 0.80) * fres;               // rim / edge glow
-
-  // ── Vignette ─────────────────────────────────────────────────────────────────
+  // Vignette
   float vd  = length(vUv - 0.5) * 1.78;
-  float vig = smoothstep(1.06, 0.06, vd);
-  col      *= mix(0.35, 1.0, vig);
+  col      *= mix(0.35, 1.0, smoothstep(1.06, 0.06, vd));
 
-  // ── Filmic tone map — kontrastı artır, beyazları koru ────────────────────────
-  col  = col * 1.18;
-  col  = col / (col + vec3(0.62)) * 1.10;
-  col  = pow(col, vec3(0.88)); // hafif gamma lift — siyahları koru
+  // Filmic tone map
+  col = col * 1.15 / (col + vec3(0.65)) * 1.08;
+  col = pow(col, vec3(0.90));
 
   gl_FragColor = vec4(col, 1.0);
 }
