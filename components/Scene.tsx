@@ -7,12 +7,21 @@ import { LiquidMetalMaterial } from './LiquidMetalMaterial';
 
 export function Scene() {
   const mousePos = useRef({ x: 0.5, y: 0.5 });
+  const mouseVel = useRef({ x: 0, y: 0 });
+  const lastMouse = useRef({ x: 0.5, y: 0.5 });
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    mousePos.current = {
-      x: e.clientX / window.innerWidth,
-      y: 1.0 - e.clientY / window.innerHeight,
+    const nx = e.clientX / window.innerWidth;
+    const ny = 1.0 - e.clientY / window.innerHeight;
+
+    // Velocity = delta normalised position per frame
+    mouseVel.current = {
+      x: nx - lastMouse.current.x,
+      y: ny - lastMouse.current.y,
     };
+
+    mousePos.current  = { x: nx, y: ny };
+    lastMouse.current = { x: nx, y: ny };
   }, []);
 
   return (
@@ -21,7 +30,7 @@ export function Scene() {
       onMouseMove={handleMouseMove}
     >
       <Canvas
-        camera={{ position: [0, 0, 1.8], fov: 55, near: 0.1, far: 100 }}
+        camera={{ position: [0, 0, 1.6], fov: 52, near: 0.1, far: 100 }}
         gl={{
           antialias: true,
           alpha: false,
@@ -33,7 +42,7 @@ export function Scene() {
         style={{ background: '#050505' }}
       >
         <AdaptiveDpr pixelated />
-        <LiquidMetalMaterial mousePos={mousePos} />
+        <LiquidMetalMaterial mousePos={mousePos} mouseVel={mouseVel} />
       </Canvas>
     </div>
   );
