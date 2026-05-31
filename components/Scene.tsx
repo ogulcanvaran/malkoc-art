@@ -2,7 +2,7 @@
 
 import { useRef, useCallback, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { AdaptiveDpr, Environment } from '@react-three/drei';
+import { AdaptiveDpr } from '@react-three/drei';
 import { LiquidMetalMaterial } from './LiquidMetalMaterial';
 import { CentralSphere } from './CentralSphere';
 
@@ -17,8 +17,10 @@ function SceneContents({
   return (
     <>
       <AdaptiveDpr pixelated />
-      {/* Subtle HDRI-style environment for sphere reflections */}
-      <Environment preset="studio" environmentIntensity={0.18} />
+      {/* Inline lights — no external HDR fetch */}
+      <ambientLight intensity={0.08} color="#1a1a2e" />
+      <directionalLight position={[-2, 3, 2]} intensity={0.6} color="#c8ccd8" />
+      <directionalLight position={[3, -1, 1]} intensity={0.15} color="#8090b0" />
       <LiquidMetalMaterial
         mousePos={mousePos}
         sphereWorldRadius={SPHERE_WORLD_RADIUS}
