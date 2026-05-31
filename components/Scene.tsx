@@ -2,14 +2,35 @@
 
 import { useRef, useCallback, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { AdaptiveDpr } from '@react-three/drei';
+import { AdaptiveDpr, Environment } from '@react-three/drei';
 import { LiquidMetalMaterial } from './LiquidMetalMaterial';
+import { CentralSphere } from './CentralSphere';
+
+// Sphere world-space radius — must match CentralSphere args[0]
+const SPHERE_WORLD_RADIUS = 0.22;
+
+function SceneContents({
+  mousePos,
+}: {
+  mousePos: React.MutableRefObject<{ x: number; y: number }>;
+}) {
+  return (
+    <>
+      <AdaptiveDpr pixelated />
+      {/* Subtle HDRI-style environment for sphere reflections */}
+      <Environment preset="studio" environmentIntensity={0.18} />
+      <LiquidMetalMaterial
+        mousePos={mousePos}
+        sphereWorldRadius={SPHERE_WORLD_RADIUS}
+      />
+      <CentralSphere />
+    </>
+  );
+}
 
 export function Scene() {
   const mousePos = useRef({ x: 0.5, y: 0.5 });
-  const divRef   = useRef<HTMLDivElement>(null);
 
-  // Use window-level listener so it never misses events
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       mousePos.current = {
@@ -22,7 +43,7 @@ export function Scene() {
   }, []);
 
   return (
-    <div ref={divRef} className="absolute inset-0 w-full h-full">
+    <div className="absolute inset-0 w-full h-full">
       <Canvas
         camera={{ position: [0, 0, 1.55], fov: 50, near: 0.1, far: 100 }}
         gl={{
@@ -30,13 +51,12 @@ export function Scene() {
           alpha:           false,
           powerPreference: 'high-performance',
           stencil:         false,
-          depth:           false,
+          depth:           true, // need depth for sphere over plane
         }}
         dpr={[1, 1.5]}
         style={{ background: '#050505' }}
       >
-        <AdaptiveDpr pixelated />
-        <LiquidMetalMaterial mousePos={mousePos} />
+        <SceneContents mousePos={mousePos} />
       </Canvas>
     </div>
   );
