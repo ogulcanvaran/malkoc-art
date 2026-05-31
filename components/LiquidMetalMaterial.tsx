@@ -12,26 +12,29 @@ interface LiquidMetalMaterialProps {
 }
 
 export function LiquidMetalMaterial({ mousePos, mouseVel }: LiquidMetalMaterialProps) {
-  const meshRef  = useRef<THREE.Mesh>(null!);
-  const matRef   = useRef<THREE.ShaderMaterial>(null!);
+  const meshRef = useRef<THREE.Mesh>(null!);
+  const matRef  = useRef<THREE.ShaderMaterial>(null!);
   const { viewport } = useThree();
+
+  // Smoothed delta — decays slowly so drag trails linger like viscous material
+  const smoothDelta = useRef(new THREE.Vector2(0, 0));
 
   const uniforms = useMemo(
     () => ({
       uTime:       { value: 0 },
       uMousePos:   { value: new THREE.Vector2(0.5, 0.5) },
       uMousePower: { value: 0 },
+      uMouseDelta: { value: new THREE.Vector2(0, 0) },
     }),
     []
   );
 
-  // Build geometry once per viewport size
   const geometry = useMemo(() => {
     return new THREE.PlaneGeometry(
       viewport.width  + 0.5,
       viewport.height + 0.5,
-      200,
-      200
+      240,
+      240
     );
   }, [viewport.width, viewport.height]);
 
@@ -41,14 +44,24 @@ export function LiquidMetalMaterial({ mousePos, mouseVel }: LiquidMetalMaterialP
 
     u.uTime.value = clock.getElapsedTime();
 
-    // Smooth position tracking
-    const target = new THREE.Vector2(mousePos.current.x, mousePos.current.y);
-    u.uMousePos.value.lerp(target, 0.05);
+    // Smooth position — slower lerp = heavier/more viscous feeling
+    const targetPos = new THREE.Vector2(mousePos.current.x, mousePos.current.y);
+    u.uMousePos.value.lerp(targetPos, 0.04);
 
-    // Mouse power: ramps up with movement speed, decays when still
+    // Accumulate raw delta, decay slowly — drag feels heavy and persistent
+    smoothDelta.current.lerp(
+      new THREE.Vector2(mouseVel.current.x, mouseVel.current.y),
+      0.12
+    );
+    // Decay back to zero when mouse is still
+    smoothDelta.current.multiplyScalar(0.93);
+    u.uMouseDelta.value.copy(smoothDelta.current);
+
+    // Mouse power from speed — builds fast, decays slowly like thick fluid
     const speed = Math.sqrt(mouseVel.current.x ** 2 + mouseVel.current.y ** 2);
-    const targetPower = THREE.MathUtils.clamp(speed * 18, 0, 1);
-    u.uMousePower.value = THREE.MathUtils.lerp(u.uMousePower.value, targetPower, 0.06);
+    const targetPower = Math.min(speed * 22, 1.0);
+    const decayRate   = targetPower > u.uMousePower.value ? 0.10 : 0.025; // slow decay
+    u.uMousePower.value = THREE.MathUtils.lerp(u.uMousePower.value, targetPower, decayRate);
   });
 
   return (
