@@ -57,25 +57,23 @@ float warpedFbm(vec3 p) {
 void main() {
   vUv = uv;
 
-  float t = uTime * 0.065; // glacial speed — calm, majestic
+  float t = uTime * 0.055; // glacial — calm, majestic
 
   // ── Mouse drag offset ────────────────────────────────────────────────────────
-  // drag vector = current smoothed pos minus lagging copy
-  // When you move fast the lag falls behind, creating a pull direction
-  vec2 drag = (uMousePos - uMouseLag) * 2.8;
+  vec2 drag = (uMousePos - uMouseLag) * 3.2;
 
-  // Sample point in noise space — drag deflects it like pushing thick resin
+  // Lower spatial frequency → larger, more sweeping folds
   vec3 p = vec3(
-    position.x * 0.50 + drag.x * uMousePower,
-    position.y * 0.50 + drag.y * uMousePower,
+    position.x * 0.38 + drag.x * uMousePower,
+    position.y * 0.38 + drag.y * uMousePower,
     t
   );
 
-  float elev = warpedFbm(p) * 0.32;
+  float elev = warpedFbm(p) * 0.42; // more amplitude → deeper, more visible folds
 
-  // Fade at edges — round silhouette, no hard border
+  // Gentle edge fade — no hard vignette on geometry
   vec2  uvCentered = vUv - 0.5;
-  float edge = 1.0 - smoothstep(0.30, 0.50, length(uvCentered));
+  float edge = 1.0 - smoothstep(0.42, 0.52, length(uvCentered));
   elev *= edge;
 
   vElevation = elev;

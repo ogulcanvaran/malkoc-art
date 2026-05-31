@@ -39,20 +39,19 @@ export function LiquidMetalMaterial({ mousePos }: LiquidMetalMaterialProps) {
 
     const raw = new THREE.Vector2(mousePos.current.x, mousePos.current.y);
 
-    // Fast position — follows mouse with mild smoothing
-    u.uMousePos.value.lerp(raw, 0.07);
+    // Fast position — smooth but noticeably slower
+    u.uMousePos.value.lerp(raw, 0.032);
 
-    // Lag position — much slower, always behind
-    // Drag = uMousePos - uMouseLag gives the displacement vector
-    u.uMouseLag.value.lerp(u.uMousePos.value, 0.018);
+    // Lag position — very slow, creates the drag trail
+    u.uMouseLag.value.lerp(u.uMousePos.value, 0.008);
 
     // Power = magnitude of drag vector, clamped
     const drag = u.uMousePos.value.clone().sub(u.uMouseLag.value);
     const dragLen = drag.length();
-    const targetPower = Math.min(dragLen * 9.0, 1.0);
+    const targetPower = Math.min(dragLen * 10.0, 1.0);
 
     // Builds quickly, decays slowly → thick fluid feel
-    const rate = targetPower > u.uMousePower.value ? 0.12 : 0.03;
+    const rate = targetPower > u.uMousePower.value ? 0.10 : 0.02;
     u.uMousePower.value = THREE.MathUtils.lerp(u.uMousePower.value, targetPower, rate);
   });
 

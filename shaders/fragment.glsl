@@ -25,14 +25,18 @@ void main() {
   vec3  N = normalize(vNormal);
   float e = vElevation;
 
-  // ── Pure black chrome base — NO grey ────────────────────────────────────────
-  // Black lacquer/resin: albedo is essentially zero
-  // All visible colour comes from specular reflections only
-  vec3 albedo = vec3(0.006, 0.005, 0.007);
+  // ── Dark navy-black base — matches LOUD SRL reference ───────────────────────
+  // Folds need to be *visible*: a very dark charcoal-indigo base so the
+  // geometry reads clearly in shadow, not absolute black
+  vec3 cShadow = vec3(0.022, 0.020, 0.030); // deep indigo-black (shadowed valleys)
+  vec3 cBase   = vec3(0.042, 0.040, 0.058); // dark charcoal-blue (mid slopes)
+  vec3 cRaise  = vec3(0.072, 0.068, 0.092); // slightly lighter on raised areas
 
-  // Very subtle depth tint in deep valleys (cooler/bluer) to read the geometry
-  float depth   = smoothstep(0.0, -0.18, e);
-  albedo       += vec3(0.004, 0.004, 0.010) * depth;
+  float tBase  = smoothstep(-0.20, 0.10, e);
+  float tRaise = smoothstep( 0.06, 0.32, e);
+
+  vec3 albedo  = mix(cShadow, cBase,  tBase);
+  albedo       = mix(albedo,  cRaise, tRaise);
 
   // ── Cinematic key light — follows mouse ──────────────────────────────────────
   vec2  mOff   = (uMousePos - 0.5) * 0.50;
@@ -53,20 +57,21 @@ void main() {
   // Fresnel — bright white on glancing angles (fold edges)
   float fres   = schlick(V, N, 0.03) * 0.22;
 
-  // ── Compose — pure reflective, no grey fill ──────────────────────────────────
-  vec3 col = albedo * 0.18;          // tiny ambient — keeps absolute-zero away
+  // ── Compose ──────────────────────────────────────────────────────────────────
+  vec3 col = albedo * 0.85;          // ambient — surface reads in shadow too
+  col     += albedo * NdL * 0.55; // diffuse shading shows fold depth
   col     += vec3(1.00) * spec;      // primary hot spot
   col     += vec3(0.85, 0.90, 1.00) * specF; // cool secondary
-  col     += vec3(0.70, 0.72, 0.78) * fres;  // fresnel rim
+  col     += vec3(0.65, 0.68, 0.80) * fres;  // fresnel rim on fold edges
 
-  // ── Deep vignette — focus on centre, black edges ─────────────────────────────
-  float vd  = length(vUv - 0.5) * 1.80;
-  float vig = smoothstep(1.05, 0.05, vd);
-  col      *= mix(0.30, 1.0, vig);
+  // ── Subtle vignette — darken corners, keep centre bright ─────────────────────
+  float vd  = length(vUv - 0.5) * 1.70;
+  float vig = smoothstep(1.05, 0.10, vd);
+  col      *= mix(0.45, 1.0, vig);
 
-  // ── Tone map — preserve hot specular whites, crush darks ────────────────────
-  col  = col * 1.20;
-  col  = pow(col / (col + vec3(0.65)) * 1.08, vec3(0.90)); // slight gamma lift
+  // ── Tone map ─────────────────────────────────────────────────────────────────
+  col  = col * 1.10;
+  col  = pow(col / (col + vec3(0.70)) * 1.06, vec3(0.92));
 
   gl_FragColor = vec4(col, 1.0);
 }
