@@ -53,20 +53,19 @@ void main() {
   vec2  drag = (uMousePos - uMouseLag) * 3.5;
 
   vec3 p = vec3(
-    position.x * 0.26 + drag.x * uMousePower,
-    position.y * 0.26 + drag.y * uMousePower,
+    position.x * 0.18 + drag.x * uMousePower,
+    position.y * 0.18 + drag.y * uMousePower,
     t
   );
 
-  float elev = liquidField(p) * 0.56;
+  float elev = liquidField(p) * 0.70;
   float edge = 1.0 - smoothstep(0.58, 0.72, length(vUv - 0.5));
   elev *= edge;
   vElevation = elev;
 
-  // Normal — sadece 2 yön (X, Y) finite diff, daha hafif
   float eps = 0.010;
-  float eR  = liquidField(p + vec3(eps, 0.0, 0.0)) * 0.56;
-  float eU  = liquidField(p + vec3(0.0, eps, 0.0)) * 0.56;
+  float eR  = liquidField(p + vec3(eps, 0.0, 0.0)) * 0.70;
+  float eU  = liquidField(p + vec3(0.0, eps, 0.0)) * 0.70;
 
   vec2 grad = vec2(elev - eR, elev - eU) / eps;
   vGradient = length(grad);

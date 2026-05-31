@@ -24,45 +24,50 @@ void main() {
   float NdV = max(dot(N, V), 0.0);
   float e   = vElevation;
 
-  // Derin siyah — obsidyen / erimiş metal
-  vec3 col  = mix(vec3(0.006, 0.005, 0.008),
-                  vec3(0.038, 0.034, 0.052),
-                  smoothstep(-0.20, 0.35, e));
+  // ── Renk: derin siyah vadi → koyu lacivert tepe ──────────────────────────────
+  // LOUD referansındaki gibi: vadilar saf siyah, tepeler çok koyu gri-lacivert
+  float tSurface = smoothstep(-0.25, 0.45, e);
+  vec3  albedo   = mix(
+    vec3(0.005, 0.004, 0.007),   // vadi: saf siyah
+    vec3(0.048, 0.044, 0.065),   // tepe: çok koyu lacivert-gri
+    tSurface
+  );
 
-  // Key light — mouse'la kayar
+  // ── Işık ─────────────────────────────────────────────────────────────────────
   vec2  mOff   = (uMousePos - 0.5) * 0.55;
-  vec3  keyDir = normalize(vec3(-0.55 + mOff.x, 0.85 + mOff.y, 1.0));
+  vec3  keyDir = normalize(vec3(-0.50 + mOff.x, 0.80 + mOff.y, 1.0));
   float NdK    = max(dot(N, keyDir), 0.0);
   vec3  H_key  = normalize(keyDir + V);
 
-  // Diffuse — fold geometrisi okunur
-  col += col * NdK * 0.55;
+  // ── Specular: yüksek roughness = fold boyunca uzanan GENIŞ highlight ─────────
+  // LOUD'daki o büyük yumuşak parlaklık buradan geliyor
+  float spec1 = GGX(N, H_key, 0.16) * NdK * 1.10;  // ana geniş highlight
+  float spec2 = GGX(N, H_key, 0.38) * NdK * 0.45;  // çok geniş soft glow
 
-  // Specular 1 — mirror flash (cıva / krom)
-  col += vec3(1.00, 0.97, 0.93) * GGX(N, H_key, 0.038) * NdK * 1.30;
-
-  // Specular 2 — geniş fold glow
-  col += vec3(0.85, 0.90, 1.00) * GGX(N, H_key, 0.110) * NdK * 0.50;
-
-  // Fill light
-  vec3  fillDir = normalize(vec3(0.60, -0.35, 0.80));
+  // Fill light — karşı taraftan yumuşak dolgu
+  vec3  fillDir = normalize(vec3(0.55, -0.30, 0.85));
   float NdF     = max(dot(N, fillDir), 0.0);
-  col += vec3(0.75, 0.82, 1.00) * GGX(N, normalize(fillDir+V), 0.130) * NdF * 0.22;
+  float specF   = GGX(N, normalize(fillDir+V), 0.28) * NdF * 0.20;
 
-  // Fold edge lines — vGradient yüksek olduğu yerlerde ince parlak çizgi
-  float edgeLine = smoothstep(0.55, 1.20, vGradient) * GGX(N, H_key, 0.022) * NdK;
-  col += vec3(1.00, 0.95, 0.88) * edgeLine * 0.75;
+  // ── Diffuse — fold derinliği okunur ─────────────────────────────────────────
+  vec3  col  = albedo * (0.18 + NdK * 0.45 + NdF * 0.10);
 
-  // Fresnel rim
-  col += vec3(0.50, 0.58, 0.78) * schlick(NdV, 0.04) * 0.25;
+  // ── Specular ekle ────────────────────────────────────────────────────────────
+  col += vec3(0.95, 0.97, 1.00) * spec1;
+  col += vec3(0.80, 0.85, 1.00) * spec2;
+  col += vec3(0.75, 0.80, 1.00) * specF;
 
-  // Vignette
-  float vd  = length(vUv - 0.5) * 1.78;
-  col      *= mix(0.35, 1.0, smoothstep(1.06, 0.06, vd));
+  // ── Fresnel — fold kenarlarında ince rim ────────────────────────────────────
+  col += vec3(0.45, 0.52, 0.72) * schlick(NdV, 0.04) * 0.20;
 
-  // Filmic tone map
-  col = col * 1.15 / (col + vec3(0.65)) * 1.08;
-  col = pow(col, vec3(0.90));
+  // ── Vignette ────────────────────────────────────────────────────────────────
+  float vd  = length(vUv - 0.5) * 1.75;
+  col      *= mix(0.32, 1.0, smoothstep(1.06, 0.06, vd));
+
+  // ── Filmic — kontrastı yüksek tut, siyahları ez ──────────────────────────────
+  col  = col * 1.20;
+  col  = col / (col + vec3(0.60)) * 1.08;
+  col  = pow(col, vec3(0.88));
 
   gl_FragColor = vec4(col, 1.0);
 }
