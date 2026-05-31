@@ -8,35 +8,28 @@ import fragmentShader from '@/shaders/fragment.glsl';
 
 interface LiquidMetalMaterialProps {
   mousePos: React.MutableRefObject<{ x: number; y: number }>;
-  mouseVel: React.MutableRefObject<{ x: number; y: number }>;
 }
 
-export function LiquidMetalMaterial({ mousePos, mouseVel }: LiquidMetalMaterialProps) {
+export function LiquidMetalMaterial({ mousePos }: LiquidMetalMaterialProps) {
   const meshRef = useRef<THREE.Mesh>(null!);
   const matRef  = useRef<THREE.ShaderMaterial>(null!);
   const { viewport } = useThree();
 
-  // Smoothed delta — decays slowly so drag trails linger like viscous material
-  const smoothDelta = useRef(new THREE.Vector2(0, 0));
-
   const uniforms = useMemo(
     () => ({
       uTime:       { value: 0 },
-      uMousePos:   { value: new THREE.Vector2(0.5, 0.5) },
+      uMousePos:   { value: new THREE.Vector2(0.5, 0.5) }, // fast-smoothed
+      uMouseLag:   { value: new THREE.Vector2(0.5, 0.5) }, // slow-smoothed (drag = pos - lag)
       uMousePower: { value: 0 },
-      uMouseDelta: { value: new THREE.Vector2(0, 0) },
     }),
     []
   );
 
-  const geometry = useMemo(() => {
-    return new THREE.PlaneGeometry(
-      viewport.width  + 0.5,
-      viewport.height + 0.5,
-      240,
-      240
-    );
-  }, [viewport.width, viewport.height]);
+  const geometry = useMemo(() => new THREE.PlaneGeometry(
+    viewport.width  + 0.5,
+    viewport.height + 0.5,
+    220, 220
+  ), [viewport.width, viewport.height]);
 
   useFrame(({ clock }) => {
     if (!matRef.current) return;
@@ -44,24 +37,23 @@ export function LiquidMetalMaterial({ mousePos, mouseVel }: LiquidMetalMaterialP
 
     u.uTime.value = clock.getElapsedTime();
 
-    // Smooth position — slower lerp = heavier/more viscous feeling
-    const targetPos = new THREE.Vector2(mousePos.current.x, mousePos.current.y);
-    u.uMousePos.value.lerp(targetPos, 0.04);
+    const raw = new THREE.Vector2(mousePos.current.x, mousePos.current.y);
 
-    // Accumulate raw delta, decay slowly — drag feels heavy and persistent
-    smoothDelta.current.lerp(
-      new THREE.Vector2(mouseVel.current.x, mouseVel.current.y),
-      0.12
-    );
-    // Decay back to zero when mouse is still
-    smoothDelta.current.multiplyScalar(0.93);
-    u.uMouseDelta.value.copy(smoothDelta.current);
+    // Fast position — follows mouse with mild smoothing
+    u.uMousePos.value.lerp(raw, 0.07);
 
-    // Mouse power from speed — builds fast, decays slowly like thick fluid
-    const speed = Math.sqrt(mouseVel.current.x ** 2 + mouseVel.current.y ** 2);
-    const targetPower = Math.min(speed * 22, 1.0);
-    const decayRate   = targetPower > u.uMousePower.value ? 0.10 : 0.025; // slow decay
-    u.uMousePower.value = THREE.MathUtils.lerp(u.uMousePower.value, targetPower, decayRate);
+    // Lag position — much slower, always behind
+    // Drag = uMousePos - uMouseLag gives the displacement vector
+    u.uMouseLag.value.lerp(u.uMousePos.value, 0.018);
+
+    // Power = magnitude of drag vector, clamped
+    const drag = u.uMousePos.value.clone().sub(u.uMouseLag.value);
+    const dragLen = drag.length();
+    const targetPower = Math.min(dragLen * 9.0, 1.0);
+
+    // Builds quickly, decays slowly → thick fluid feel
+    const rate = targetPower > u.uMousePower.value ? 0.12 : 0.03;
+    u.uMousePower.value = THREE.MathUtils.lerp(u.uMousePower.value, targetPower, rate);
   });
 
   return (

@@ -1,48 +1,42 @@
 'use client';
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr } from '@react-three/drei';
 import { LiquidMetalMaterial } from './LiquidMetalMaterial';
 
 export function Scene() {
   const mousePos = useRef({ x: 0.5, y: 0.5 });
-  const mouseVel = useRef({ x: 0, y: 0 });
-  const lastMouse = useRef({ x: 0.5, y: 0.5 });
+  const divRef   = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const nx = e.clientX / window.innerWidth;
-    const ny = 1.0 - e.clientY / window.innerHeight;
-
-    // Velocity = delta normalised position per frame
-    mouseVel.current = {
-      x: nx - lastMouse.current.x,
-      y: ny - lastMouse.current.y,
+  // Use window-level listener so it never misses events
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      mousePos.current = {
+        x: e.clientX / window.innerWidth,
+        y: 1.0 - e.clientY / window.innerHeight,
+      };
     };
-
-    mousePos.current  = { x: nx, y: ny };
-    lastMouse.current = { x: nx, y: ny };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
   return (
-    <div
-      className="absolute inset-0 w-full h-full"
-      onMouseMove={handleMouseMove}
-    >
+    <div ref={divRef} className="absolute inset-0 w-full h-full">
       <Canvas
-        camera={{ position: [0, 0, 1.6], fov: 52, near: 0.1, far: 100 }}
+        camera={{ position: [0, 0, 1.55], fov: 50, near: 0.1, far: 100 }}
         gl={{
-          antialias: true,
-          alpha: false,
+          antialias:       true,
+          alpha:           false,
           powerPreference: 'high-performance',
-          stencil: false,
-          depth: false,
+          stencil:         false,
+          depth:           false,
         }}
         dpr={[1, 1.5]}
         style={{ background: '#050505' }}
       >
         <AdaptiveDpr pixelated />
-        <LiquidMetalMaterial mousePos={mousePos} mouseVel={mouseVel} />
+        <LiquidMetalMaterial mousePos={mousePos} />
       </Canvas>
     </div>
   );
