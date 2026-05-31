@@ -1,34 +1,69 @@
 @import "tailwindcss";
 
+/* ── Design tokens ────────────────────────────────────────────────────────── */
 :root {
-  --background: #050505;
-  --foreground: #ffffff;
+  --gold:          #C9A84C;
+  --gold-light:    #E2C97E;
+  --gold-dark:     #9A7A30;
+  --gold-muted:    rgba(201,168,76,0.18);
+  --black:         #0A0A0A;
+  --black-surface: #111111;
+  --black-card:    #161616;
+  --white:         #F5F5F0;
+  --white-muted:   rgba(245,245,240,0.60);
+  --white-faint:   rgba(245,245,240,0.18);
+
+  --font-script:    var(--font-great-vibes);
+  --font-display:   var(--font-cormorant);
+  --font-body:      var(--font-inter);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--black);
+  --color-foreground:  var(--white);
+  --font-sans: var(--font-inter);
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ── Reset ──────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #050505;
-  color: #ffffff;
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+html {
+  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-::selection {
-  background: rgba(255, 255, 255, 0.15);
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  min-height: 100vh;
+  /* NO overflow:hidden — page must scroll */
 }
+
+::selection { background: var(--gold-muted); color: var(--white); }
+
+/* ── Typography helpers ─────────────────────────────────────────────────────── */
+.font-script  { font-family: var(--font-great-vibes), cursive; }
+.font-display { font-family: var(--font-cormorant), serif; }
+
+/* ── Gold gradient text ──────────────────────────────────────────────────────── */
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Gold divider line ──────────────────────────────────────────────────────── */
+.gold-line {
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 2px; }

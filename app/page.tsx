@@ -1,9 +1,32 @@
+import type { Metadata } from 'next';
 import { Hero } from '@/components/Hero';
+import { FeaturedWorks } from '@/components/home/FeaturedWorks';
+import { Categories } from '@/components/home/Categories';
+import { StudioTeaser } from '@/components/home/StudioTeaser';
+import { BespokeSection } from '@/components/home/BespokeSection';
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'Malkoç Dizayn | Lüks Duvar Sanatı ve Özgün Heykel',
+  alternates: { canonical: 'https://malkocdizayn.com' },
+};
+
+export default function HomePage() {
   return (
-    <main className="w-full h-screen overflow-hidden bg-[#050505]">
+    <main>
+      {/* Hero — fullscreen shader, kendi h-screen'i var */}
       <Hero />
+
+      {/* Öne çıkan eserler */}
+      <FeaturedWorks />
+
+      {/* Kategori grid */}
+      <Categories />
+
+      {/* Stüdyo teaser */}
+      <StudioTeaser />
+
+      {/* Özel sipariş CTA */}
+      <BespokeSection />
     </main>
   );
 }
