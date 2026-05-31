@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr } from '@react-three/drei';
-import { LiquidMetalMaterial } from './LiquidMetalMaterial';
+import { FluidSurface } from './FluidSurface';
 
 export function Scene() {
   const mousePos = useRef({ x: 0.5, y: 0.5 });
@@ -22,19 +22,20 @@ export function Scene() {
   return (
     <div className="absolute inset-0 w-full h-full">
       <Canvas
-        camera={{ position: [0, 0, 1.55], fov: 50, near: 0.1, far: 100 }}
+        orthographic
+        camera={{ position: [0, 0, 1], near: 0, far: 2 }}
         gl={{
-          antialias:       true,
+          antialias:       false, // fullscreen quad'da gerek yok
           alpha:           false,
           powerPreference: 'high-performance',
           stencil:         false,
           depth:           false,
         }}
-        dpr={[0.8, 1.2]}
+        dpr={[0.85, 1.1]}
         style={{ background: '#050505' }}
       >
         <AdaptiveDpr pixelated />
-        <LiquidMetalMaterial mousePos={mousePos} />
+        <FluidSurface mousePos={mousePos} />
       </Canvas>
     </div>
   );
