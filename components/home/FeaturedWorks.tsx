@@ -38,10 +38,10 @@ export function FeaturedWorks() {
     <section
       id="one-koleksiyon"
       aria-label="Öne çıkan eserler"
-      className="py-28 px-6"
+      className="py-28"
       style={{ background: 'var(--black)' }}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="site-container">
 
         {/* Section header */}
         <motion.div

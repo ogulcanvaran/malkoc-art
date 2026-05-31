@@ -27,6 +27,9 @@ export default function HomePage() {
 
       {/* Özel sipariş CTA */}
       <BespokeSection />
+
+      {/* Footer ayırıcı — gold çizgi + boşluk */}
+      <div className="border-t-[3px] border-[#C9A84C] mt-0 h-16" />
     </main>
   );
 }

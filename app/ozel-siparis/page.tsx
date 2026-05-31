@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function OzelSiparisPage() {
   return (
     <div className="pt-28 min-h-screen" style={{ background: 'var(--black)' }}>
-      <div className="max-w-3xl mx-auto px-6 py-16">
+      <div className="site-container max-w-2xl py-16">
         <nav aria-label="Breadcrumb" className="mb-10">
           <ol className="flex items-center gap-2 text-[11px] tracking-wider" style={{ color: 'var(--white-muted)' }}>
             <li><Link href="/" className="hover:text-[#C9A84C] transition-colors">Anasayfa</Link></li>

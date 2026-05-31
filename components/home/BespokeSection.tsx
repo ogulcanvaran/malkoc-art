@@ -30,7 +30,7 @@ export function BespokeSection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 1, ease }}
-        className="relative max-w-3xl mx-auto text-center"
+        className="relative site-container max-w-3xl text-center"
       >
         <span
           className="font-script text-3xl mb-4 block"

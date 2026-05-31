@@ -45,10 +45,10 @@ export function Categories() {
   return (
     <section
       aria-label="Koleksiyon kategorileri"
-      className="py-24 px-6"
+      className="py-24"
       style={{ background: 'var(--black-surface)' }}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="site-container">
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

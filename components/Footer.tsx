@@ -62,37 +62,84 @@ export function Footer() {
   return (
     <footer
       role="contentinfo"
-      style={{ background: '#0A0A0A', borderTop: '1px solid rgba(201,168,76,0.15)' }}
+      style={{ background: '#0A0A0A' }}
     >
       {/* Main grid */}
-      <div className="max-w-7xl mx-auto px-6 pt-16 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
+      <div style={{ padding: '2.5rem 18% 4rem' }}>
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12">
 
           {/* Brand column — 2 cols wide */}
-          <div className="lg:col-span-2 flex flex-col gap-5">
+          <div className="col-span-2 lg:col-span-2 flex flex-col gap-5">
             <div>
               <span
-                className="block font-script text-3xl mb-1"
+                className="block font-script text-4xl mb-1"
                 style={{ fontFamily: 'var(--font-great-vibes)', color: 'var(--gold)' }}
               >
                 Malkoç Dizayn
               </span>
               <p
-                className="text-[11px] tracking-[0.20em] uppercase mt-1"
+                className="text-[13px] tracking-[0.20em] uppercase mt-1"
                 style={{ color: 'rgba(201,168,76,0.55)' }}
               >
                 Lüks Sanat & Tasarım
               </p>
             </div>
             <p
-              className="text-[13px] leading-relaxed max-w-xs"
+              className="text-[15px] leading-relaxed max-w-xs"
               style={{ color: 'var(--white-muted)' }}
             >
               El yapımı lüks duvar sanatı, özgün heykeller ve premium dekoratif tasarım eserleri. Lüks mekânlar ve kurumsal projeler için özel üretim.
             </p>
 
+            {/* Contact info */}
+            <div className="flex flex-col gap-3 mt-1">
+              <a
+                href="tel:+905000000000"
+                className="flex items-center gap-2 text-[15px] transition-colors hover:text-[#C9A84C]"
+                style={{ color: 'var(--white-muted)' }}
+              >
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--gold)', flexShrink: 0 }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                </svg>
+                +90 500 000 00 00
+              </a>
+              <a
+                href="mailto:info@malkocdizayn.com"
+                className="flex items-center gap-2 text-[15px] transition-colors hover:text-[#C9A84C]"
+                style={{ color: 'var(--white-muted)' }}
+              >
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--gold)', flexShrink: 0 }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                info@malkocdizayn.com
+              </a>
+              <div
+                className="flex items-start gap-2 text-[15px]"
+                style={{ color: 'var(--white-muted)' }}
+              >
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--gold)', flexShrink: 0, marginTop: '2px' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                </svg>
+                <span>İstanbul, Türkiye<br /><span style={{ color: 'rgba(245,245,240,0.35)', fontSize: '11px' }}>Atölye ziyaretleri randevu ile</span></span>
+              </div>
+              <a
+                href="https://wa.me/905000000000"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 mt-1 px-4 py-2 text-[12px] tracking-[0.18em] uppercase font-medium transition-colors duration-300 hover:opacity-70 self-start"
+                style={{ color: 'var(--gold)' }}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.119.554 4.107 1.523 5.832L.057 23.522a.5.5 0 00.611.625l5.797-1.522A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.524-5.188-1.437l-.372-.22-3.847 1.01 1.029-3.745-.242-.386A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                </svg>
+                WhatsApp ile Yazın
+              </a>
+            </div>
+
             {/* Socials */}
-            <div className="flex items-center gap-4 mt-2">
+            <div className="flex items-center gap-4 mt-8 mb-6">
               {socials.map((s) => (
                 <a
                   key={s.label}
@@ -100,8 +147,8 @@ export function Footer() {
                   aria-label={s.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition-colors duration-200 hover:text-[#C9A84C]"
-                  style={{ color: 'rgba(245,245,240,0.40)' }}
+                  className="transition-colors duration-200 hover:opacity-70"
+                  style={{ color: 'var(--gold)' }}
                 >
                   {s.icon}
                 </a>
@@ -112,17 +159,17 @@ export function Footer() {
           {/* Koleksiyon */}
           <div>
             <h3
-              className="text-[10px] tracking-[0.25em] uppercase mb-5"
+              className="text-[13px] tracking-[0.25em] uppercase font-bold mb-4"
               style={{ color: 'var(--gold)' }}
             >
               Koleksiyon
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 mt-4">
               {collections.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-[13px] transition-colors duration-200 hover:text-[#C9A84C]"
+                    className="text-[15px] transition-colors duration-200 hover:text-[#C9A84C]"
                     style={{ color: 'var(--white-muted)' }}
                   >
                     {l.label}
@@ -135,17 +182,17 @@ export function Footer() {
           {/* Stüdyo */}
           <div>
             <h3
-              className="text-[10px] tracking-[0.25em] uppercase mb-5"
+              className="text-[13px] tracking-[0.25em] uppercase font-bold mb-4"
               style={{ color: 'var(--gold)' }}
             >
               Stüdyo
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 mt-4">
               {studio.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-[13px] transition-colors duration-200 hover:text-[#C9A84C]"
+                    className="text-[15px] transition-colors duration-200 hover:text-[#C9A84C]"
                     style={{ color: 'var(--white-muted)' }}
                   >
                     {l.label}
@@ -158,17 +205,17 @@ export function Footer() {
           {/* Müşteri */}
           <div>
             <h3
-              className="text-[10px] tracking-[0.25em] uppercase mb-5"
+              className="text-[13px] tracking-[0.25em] uppercase font-bold mb-4"
               style={{ color: 'var(--gold)' }}
             >
               Müşteri
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 mt-4">
               {support.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-[13px] transition-colors duration-200 hover:text-[#C9A84C]"
+                    className="text-[15px] transition-colors duration-200 hover:text-[#C9A84C]"
                     style={{ color: 'var(--white-muted)' }}
                   >
                     {l.label}
@@ -179,54 +226,12 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Newsletter bar */}
-        <div
-          className="mt-14 pt-10 mb-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
-          style={{ borderTop: '1px solid rgba(201,168,76,0.10)' }}
-        >
-          <div>
-            <p
-              className="text-[13px] font-medium mb-1"
-              style={{ color: 'var(--white)', fontFamily: 'var(--font-cormorant)', fontSize: '1.1rem' }}
-            >
-              Yeni eserlerden ilk siz haberdar olun
-            </p>
-            <p className="text-[12px]" style={{ color: 'var(--white-muted)' }}>
-              Koleksiyon güncellemeleri ve özel davetler için bültenimize katılın.
-            </p>
-          </div>
-          <form
-            className="flex gap-0 w-full md:w-auto"
-            onSubmit={(e) => e.preventDefault()}
-            aria-label="Bülten formu"
-          >
-            <input
-              type="email"
-              placeholder="E-posta adresiniz"
-              className="px-4 py-3 text-[12px] bg-transparent outline-none w-64 placeholder:opacity-40"
-              style={{
-                border: '1px solid rgba(201,168,76,0.30)',
-                color: 'var(--white)',
-                borderRight: 'none',
-              }}
-              aria-label="E-posta adresi"
-            />
-            <button
-              type="submit"
-              className="px-5 py-3 text-[10px] tracking-[0.18em] uppercase font-medium transition-colors hover:bg-[#9A7A30]"
-              style={{ background: 'var(--gold)', color: 'var(--black)' }}
-            >
-              Katıl
-            </button>
-          </form>
-        </div>
-
         {/* Legal bar */}
         <div
-          className="pt-6 flex flex-col md:flex-row items-center justify-between gap-3"
-          style={{ borderTop: '1px solid rgba(201,168,76,0.08)' }}
+          className="flex flex-col md:flex-row items-center justify-between gap-3"
+          style={{ borderTop: '1px solid rgba(201,168,76,0.45)', marginTop: '2.5rem', paddingTop: '1.5rem' }}
         >
-          <p className="text-[11px] tracking-wide" style={{ color: 'rgba(245,245,240,0.28)' }}>
+          <p className="text-[15px] tracking-wide font-medium" style={{ color: 'var(--gold)' }}>
             © {new Date().getFullYear()} Malkoç Dizayn. Tüm hakları saklıdır.
           </p>
           <div className="flex items-center gap-6">
@@ -238,8 +243,8 @@ export function Footer() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-[11px] transition-colors hover:text-[#C9A84C]"
-                style={{ color: 'rgba(245,245,240,0.28)' }}
+                className="text-[15px] font-medium transition-colors hover:opacity-70"
+                style={{ color: 'var(--gold)' }}
               >
                 {l.label}
               </Link>
@@ -250,3 +255,16 @@ export function Footer() {
     </footer>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

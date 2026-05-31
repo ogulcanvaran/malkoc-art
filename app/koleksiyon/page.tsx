@@ -25,7 +25,7 @@ const works = Array.from({ length: 9 }, (_, i) => ({
 export default function KoleksiyonPage() {
   return (
     <div className="pt-28 min-h-screen" style={{ background: 'var(--black)' }}>
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="site-container">
 
         {/* Breadcrumb — SEO */}
         <nav aria-label="Breadcrumb" className="mb-10">

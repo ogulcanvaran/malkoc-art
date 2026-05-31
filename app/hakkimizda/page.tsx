@@ -32,7 +32,7 @@ export default function HakkimizdaPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-20">
+      <div className="site-container py-20">
 
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-12">

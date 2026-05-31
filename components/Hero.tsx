@@ -32,7 +32,7 @@ export function Hero() {
       />
 
       {/* Hero content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+      <div className="absolute inset-0 flex flex-col items-start justify-center" style={{ paddingLeft: 'clamp(3rem, 8vw, 8rem)', paddingRight: '4rem' }}>
         <motion.div
           initial="hidden"
           animate="show"
@@ -40,56 +40,64 @@ export function Hero() {
             hidden: {},
             show: { transition: { staggerChildren: 0.18, delayChildren: 0.3 } },
           }}
-          className="flex flex-col items-center gap-6 max-w-5xl w-full"
+          className="flex flex-col items-start gap-5"
+          style={{ maxWidth: '560px' }}
         >
-          {/* Eyebrow label */}
-          <motion.p
+          {/* Eyebrow — script */}
+          <motion.span
             variants={fadeUp}
             transition={{ duration: 0.9, ease }}
-            className="text-[11px] tracking-[0.28em] uppercase font-medium"
-            style={{ color: 'rgba(255,255,255,0.38)' }}
+            style={{
+              fontFamily: 'var(--font-great-vibes), cursive',
+              fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
+              background: 'linear-gradient(135deg,#E2C97E 0%,#C9A84C 50%,#9A7A30 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              display: 'block',
+            }}
           >
-            Digital Agency
-          </motion.p>
+            El Yapımı Lüks Sanat
+          </motion.span>
 
           {/* Main headline */}
           <motion.h1
             variants={fadeUp}
             transition={{ duration: 1.1, ease }}
-            className="font-bold leading-[1.05] tracking-[-0.03em] select-none"
+            className="font-light leading-[1.08] select-none"
             style={{
-              fontSize: 'clamp(2.6rem, 6.5vw, 5.6rem)',
+              fontSize: 'clamp(2.8rem, 6.5vw, 5.8rem)',
+              fontFamily: 'var(--font-cormorant)',
               color: '#FFFFFF',
-              textShadow: '0 0 80px rgba(255,255,255,0.06)',
+              textShadow: '0 0 80px rgba(255,255,255,0.04)',
+              letterSpacing: '-0.01em',
             }}
           >
-            Building digital products
+            Mekânınıza Ruh Katan
             <br />
-            <span style={{ color: 'rgba(255,255,255,0.82)' }}>
-              people remember.
-            </span>
+            <em style={{ color: '#C9A84C' }}>Özgün Eserler</em>
           </motion.h1>
 
           {/* Sub-headline */}
           <motion.p
             variants={fadeUp}
             transition={{ duration: 1.0, ease }}
-            className="text-base md:text-lg leading-relaxed max-w-xl font-light tracking-wide"
-            style={{ color: 'rgba(255,255,255,0.52)' }}
+            className="text-base md:text-lg leading-relaxed max-w-lg font-light tracking-wide"
+            style={{ color: 'rgba(255,255,255,0.50)' }}
           >
-            Design, development, AI and growth
+            Reçine, metal varak ve özel pigmentlerle şekillenen
             <br className="hidden sm:block" />
-            for ambitious companies.
+            imzalı sanat eserleri. Lüks mekânlar için özel üretim.
           </motion.p>
 
           {/* CTA row */}
           <motion.div
             variants={fadeUp}
             transition={{ duration: 1.0, ease }}
-            className="flex flex-col sm:flex-row items-center gap-3 mt-4"
+            className="flex flex-col sm:flex-row items-start gap-4 mt-2"
           >
-            <Button primary>Start a Project</Button>
-            <Button>View Work</Button>
+            <Button primary>Koleksiyonu Keşfet</Button>
+            <Button>Özel Sipariş Ver</Button>
           </motion.div>
         </motion.div>
       </div>
@@ -105,7 +113,7 @@ export function Hero() {
           className="text-[10px] tracking-[0.22em] uppercase"
           style={{ color: 'rgba(255,255,255,0.25)' }}
         >
-          Scroll
+          Keşfet
         </span>
         <ScrollLine />
       </motion.div>

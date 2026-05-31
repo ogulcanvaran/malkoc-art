@@ -9,6 +9,7 @@
   --black:         #0A0A0A;
   --black-surface: #111111;
   --black-card:    #161616;
+  --black-warm:    #1C1A18;
   --white:         #F5F5F0;
   --white-muted:   rgba(245,245,240,0.60);
   --white-faint:   rgba(245,245,240,0.18);
@@ -31,6 +32,7 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body {
@@ -38,7 +40,7 @@ body {
   color: var(--white);
   font-family: var(--font-inter), system-ui, sans-serif;
   min-height: 100vh;
-  /* NO overflow:hidden — page must scroll */
+  overflow-x: hidden;
 }
 
 ::selection { background: var(--gold-muted); color: var(--white); }
@@ -53,6 +55,23 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ── Centered content container ─────────────────────────────────────────────── */
+.site-container {
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .site-container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 }
 
 /* ── Gold divider line ──────────────────────────────────────────────────────── */
