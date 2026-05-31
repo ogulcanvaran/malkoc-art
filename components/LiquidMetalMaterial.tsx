@@ -39,11 +39,11 @@ export function LiquidMetalMaterial({ mousePos }: LiquidMetalMaterialProps) {
 
     const raw = new THREE.Vector2(mousePos.current.x, mousePos.current.y);
 
-    // Very slow position tracking — 4x slower than before
-    u.uMousePos.value.lerp(raw, 0.008);
+    // 10x slower than previous — almost imperceptible drift
+    u.uMousePos.value.lerp(raw, 0.0008);
 
-    // Lag even slower — wide gap creates strong drag vector
-    u.uMouseLag.value.lerp(u.uMousePos.value, 0.002);
+    // Lag extremely slow — drag lingers for many seconds
+    u.uMouseLag.value.lerp(u.uMousePos.value, 0.0002);
 
     // Power = magnitude of drag vector
     const drag = u.uMousePos.value.clone().sub(u.uMouseLag.value);
