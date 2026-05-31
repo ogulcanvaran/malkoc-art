@@ -28,12 +28,13 @@ void main() {
   // ── Dark navy-black base — matches LOUD SRL reference ───────────────────────
   // Folds need to be *visible*: a very dark charcoal-indigo base so the
   // geometry reads clearly in shadow, not absolute black
-  vec3 cShadow = vec3(0.022, 0.020, 0.030); // deep indigo-black (shadowed valleys)
-  vec3 cBase   = vec3(0.042, 0.040, 0.058); // dark charcoal-blue (mid slopes)
-  vec3 cRaise  = vec3(0.072, 0.068, 0.092); // slightly lighter on raised areas
+  // Darker valleys, more visible mid-tones — matches LOUD's dark navy surface
+  vec3 cShadow = vec3(0.014, 0.012, 0.020); // near-black indigo valley
+  vec3 cBase   = vec3(0.055, 0.052, 0.075); // dark navy on mid slopes
+  vec3 cRaise  = vec3(0.095, 0.090, 0.125); // visible charcoal on raised folds
 
-  float tBase  = smoothstep(-0.20, 0.10, e);
-  float tRaise = smoothstep( 0.06, 0.32, e);
+  float tBase  = smoothstep(-0.25, 0.12, e);
+  float tRaise = smoothstep( 0.08, 0.45, e);
 
   vec3 albedo  = mix(cShadow, cBase,  tBase);
   albedo       = mix(albedo,  cRaise, tRaise);
@@ -44,18 +45,18 @@ void main() {
   vec3  H_key  = normalize(keyDir + V);
   float NdL    = max(dot(N, keyDir), 0.0);
 
-  // Roughness very low → mirror-like lacquer highlight
-  float rough  = 0.045;
-  float spec   = GGX(N, H_key, rough) * NdL * 0.90;
+  // Slightly higher roughness so highlight spreads across large folds
+  float rough  = 0.065;
+  float spec   = GGX(N, H_key, rough) * NdL * 1.10;
 
-  // Second smaller light for fold depth reading
+  // Fill light — opposite corner, reveals fold structure
   vec3  fillDir = normalize(vec3(0.55, -0.30, 0.75));
   vec3  H_fill  = normalize(fillDir + V);
   float fillNdL = max(dot(N, fillDir), 0.0);
-  float specF   = GGX(N, H_fill, 0.09) * fillNdL * 0.12;
+  float specF   = GGX(N, H_fill, 0.12) * fillNdL * 0.18;
 
-  // Fresnel — bright white on glancing angles (fold edges)
-  float fres   = schlick(V, N, 0.03) * 0.22;
+  // Fresnel — bright on fold edges and glancing surfaces
+  float fres   = schlick(V, N, 0.03) * 0.30;
 
   // ── Compose ──────────────────────────────────────────────────────────────────
   vec3 col = albedo * 0.85;          // ambient — surface reads in shadow too

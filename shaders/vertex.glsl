@@ -45,47 +45,47 @@ float fbm(vec3 p) {
   return v;
 }
 
-// ── Single warp pass to create large rolling folds ───────────────────────────
+// ── Single warp pass — stronger warp for sweeping S-curves ──────────────────
 float warpedFbm(vec3 p) {
   vec2 warp = vec2(
     fbm(p + vec3(1.7, 9.2, 3.5)),
     fbm(p + vec3(8.3, 2.8, 5.1))
   );
-  return fbm(p + vec3(warp * 1.20, 0.0));
+  return fbm(p + vec3(warp * 2.20, 0.0)); // stronger warp = more flowing curves
 }
 
 void main() {
   vUv = uv;
 
-  float t = uTime * 0.055; // glacial — calm, majestic
+  float t = uTime * 0.050; // glacial drift
 
   // ── Mouse drag offset ────────────────────────────────────────────────────────
-  vec2 drag = (uMousePos - uMouseLag) * 3.2;
+  vec2 drag = (uMousePos - uMouseLag) * 3.5;
 
-  // Lower spatial frequency → larger, more sweeping folds
+  // Very low frequency → huge sweeping folds that fill the entire screen
   vec3 p = vec3(
-    position.x * 0.38 + drag.x * uMousePower,
-    position.y * 0.38 + drag.y * uMousePower,
+    position.x * 0.22 + drag.x * uMousePower,
+    position.y * 0.22 + drag.y * uMousePower,
     t
   );
 
-  float elev = warpedFbm(p) * 0.42; // more amplitude → deeper, more visible folds
+  float elev = warpedFbm(p) * 0.60; // deep relief — screen-filling 3D surface
 
-  // Gentle edge fade — no hard vignette on geometry
+  // Minimal edge fade — surface goes nearly edge to edge like LOUD SRL
   vec2  uvCentered = vUv - 0.5;
-  float edge = 1.0 - smoothstep(0.42, 0.52, length(uvCentered));
+  float edge = 1.0 - smoothstep(0.62, 0.72, length(uvCentered));
   elev *= edge;
 
   vElevation = elev;
 
   // ── Normal via finite differences ────────────────────────────────────────────
-  float eps = 0.006;
-  float hL = warpedFbm(p + vec3(-eps*0.50, 0.0,    0.0)) * 0.32 * edge;
-  float hR = warpedFbm(p + vec3( eps*0.50, 0.0,    0.0)) * 0.32 * edge;
-  float hD = warpedFbm(p + vec3( 0.0,    -eps*0.50, 0.0)) * 0.32 * edge;
-  float hU = warpedFbm(p + vec3( 0.0,     eps*0.50, 0.0)) * 0.32 * edge;
+  float eps = 0.012; // larger eps matches larger fold scale
+  float hL = warpedFbm(p + vec3(-eps, 0.0,  0.0)) * 0.60 * edge;
+  float hR = warpedFbm(p + vec3( eps, 0.0,  0.0)) * 0.60 * edge;
+  float hD = warpedFbm(p + vec3( 0.0, -eps, 0.0)) * 0.60 * edge;
+  float hU = warpedFbm(p + vec3( 0.0,  eps, 0.0)) * 0.60 * edge;
 
-  vNormal = normalize(vec3(hL - hR, hD - hU, eps));
+  vNormal = normalize(vec3(hL - hR, hD - hU, eps * 1.4));
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position.xy, elev, 1.0);
 }
