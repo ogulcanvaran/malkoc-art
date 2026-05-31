@@ -7,7 +7,7 @@ import { LiquidMetalMaterial } from './LiquidMetalMaterial';
 import { CentralSphere } from './CentralSphere';
 
 // Sphere world-space radius — must match CentralSphere args[0]
-const SPHERE_WORLD_RADIUS = 0.22;
+const SPHERE_WORLD_RADIUS = 0.16;
 
 function SceneContents({
   mousePos,
@@ -17,10 +17,10 @@ function SceneContents({
   return (
     <>
       <AdaptiveDpr pixelated />
-      {/* Inline lights — no external HDR fetch */}
-      <ambientLight intensity={0.08} color="#1a1a2e" />
-      <directionalLight position={[-2, 3, 2]} intensity={0.6} color="#c8ccd8" />
-      <directionalLight position={[3, -1, 1]} intensity={0.15} color="#8090b0" />
+      {/* Very dim lights — sphere only, wave surface lit by custom shader */}
+      <ambientLight intensity={0.04} color="#0a0a18" />
+      <directionalLight position={[-1.5, 2.5, 2.0]} intensity={0.55} color="#d0d4e8" />
+      <directionalLight position={[ 2.0, -1.0, 1.5]} intensity={0.12} color="#7080a8" />
       <LiquidMetalMaterial
         mousePos={mousePos}
         sphereWorldRadius={SPHERE_WORLD_RADIUS}

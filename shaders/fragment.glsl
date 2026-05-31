@@ -6,7 +6,7 @@ varying vec2  vUv;
 varying vec3  vNormal;
 varying float vElevation;
 
-// GGX specular — tight lacquer highlight
+// GGX specular — lacquer tight highlight
 float GGX(vec3 N, vec3 H, float roughness) {
   float a    = roughness * roughness;
   float NdH  = max(dot(N, H), 0.0);
@@ -14,10 +14,8 @@ float GGX(vec3 N, vec3 H, float roughness) {
   return (a * a) / (3.14159 * denom * denom + 1e-5);
 }
 
-// Schlick fresnel
 float schlick(vec3 V, vec3 N, float F0) {
-  float cosA = max(dot(V, N), 0.0);
-  return F0 + (1.0 - F0) * pow(1.0 - cosA, 5.0);
+  return F0 + (1.0 - F0) * pow(1.0 - max(dot(V, N), 0.0), 5.0);
 }
 
 void main() {
@@ -25,54 +23,51 @@ void main() {
   vec3  N = normalize(vNormal);
   float e = vElevation;
 
-  // ── Dark navy-black base — matches LOUD SRL reference ───────────────────────
-  // Folds need to be *visible*: a very dark charcoal-indigo base so the
-  // geometry reads clearly in shadow, not absolute black
-  // Darker valleys, more visible mid-tones — matches LOUD's dark navy surface
-  vec3 cShadow = vec3(0.014, 0.012, 0.020); // near-black indigo valley
-  vec3 cBase   = vec3(0.055, 0.052, 0.075); // dark navy on mid slopes
-  vec3 cRaise  = vec3(0.095, 0.090, 0.125); // visible charcoal on raised folds
+  // ── Deep black surface — heykel gibi: sadece yansıma var, gri yok ───────────
+  vec3 cDeep  = vec3(0.008, 0.007, 0.010); // derin vadi — neredeyse siyah
+  vec3 cMid   = vec3(0.028, 0.025, 0.038); // orta eğim — çok koyu lacivert
+  vec3 cCrest = vec3(0.055, 0.050, 0.075); // tepe — görünür ama yine koyu
 
-  float tBase  = smoothstep(-0.25, 0.12, e);
-  float tRaise = smoothstep( 0.08, 0.45, e);
+  float tMid   = smoothstep(-0.22, 0.08, e);
+  float tCrest = smoothstep( 0.06, 0.42, e);
 
-  vec3 albedo  = mix(cShadow, cBase,  tBase);
-  albedo       = mix(albedo,  cRaise, tRaise);
+  vec3 albedo  = mix(cDeep, cMid,   tMid);
+  albedo       = mix(albedo, cCrest, tCrest);
 
-  // ── Cinematic key light — follows mouse ──────────────────────────────────────
+  // ── Key light — mouse ile kayar ──────────────────────────────────────────────
   vec2  mOff   = (uMousePos - 0.5) * 0.50;
-  vec3  keyDir = normalize(vec3(-0.40 + mOff.x, 0.65 + mOff.y, 1.0));
+  vec3  keyDir = normalize(vec3(-0.50 + mOff.x, 0.80 + mOff.y, 1.0));
   vec3  H_key  = normalize(keyDir + V);
   float NdL    = max(dot(N, keyDir), 0.0);
 
-  // Slightly higher roughness so highlight spreads across large folds
-  float rough  = 0.065;
-  float spec   = GGX(N, H_key, rough) * NdL * 1.10;
+  // Çok düşük roughness → ayna gibi parlak nokta (heykel lacquer)
+  float rough  = 0.042;
+  float spec   = GGX(N, H_key, rough) * NdL * 1.20;
 
-  // Fill light — opposite corner, reveals fold structure
-  vec3  fillDir = normalize(vec3(0.55, -0.30, 0.75));
+  // Dolgu ışık — fold derinliği okumak için
+  vec3  fillDir = normalize(vec3(0.60, -0.35, 0.80));
   vec3  H_fill  = normalize(fillDir + V);
   float fillNdL = max(dot(N, fillDir), 0.0);
-  float specF   = GGX(N, H_fill, 0.12) * fillNdL * 0.18;
+  float specF   = GGX(N, H_fill, 0.10) * fillNdL * 0.22;
 
-  // Fresnel — bright on fold edges and glancing surfaces
-  float fres   = schlick(V, N, 0.03) * 0.30;
+  // Fresnel — fold kenarlarında parlak rim
+  float fres = schlick(V, N, 0.03) * 0.28;
 
-  // ── Compose ──────────────────────────────────────────────────────────────────
-  vec3 col = albedo * 0.85;          // ambient — surface reads in shadow too
-  col     += albedo * NdL * 0.55; // diffuse shading shows fold depth
-  col     += vec3(1.00) * spec;      // primary hot spot
-  col     += vec3(0.85, 0.90, 1.00) * specF; // cool secondary
-  col     += vec3(0.65, 0.68, 0.80) * fres;  // fresnel rim on fold edges
+  // ── Kompozisyon ─────────────────────────────────────────────────────────────
+  // Diffuse katkı çok düşük tutuldu — siyahı bozmadan fold geometrisi okunuyor
+  vec3 col  = albedo * (0.30 + NdL * 0.35);
+  col      += vec3(1.00) * spec;
+  col      += vec3(0.88, 0.92, 1.00) * specF;
+  col      += vec3(0.60, 0.65, 0.80) * fres;
 
-  // ── Subtle vignette — darken corners, keep centre bright ─────────────────────
-  float vd  = length(vUv - 0.5) * 1.70;
-  float vig = smoothstep(1.05, 0.10, vd);
-  col      *= mix(0.45, 1.0, vig);
+  // ── Vignette ─────────────────────────────────────────────────────────────────
+  float vd  = length(vUv - 0.5) * 1.75;
+  float vig = smoothstep(1.05, 0.08, vd);
+  col      *= mix(0.40, 1.0, vig);
 
   // ── Tone map ─────────────────────────────────────────────────────────────────
-  col  = col * 1.10;
-  col  = pow(col / (col + vec3(0.70)) * 1.06, vec3(0.92));
+  col = col * 1.15;
+  col = pow(col / (col + vec3(0.68)) * 1.08, vec3(0.91));
 
   gl_FragColor = vec4(col, 1.0);
 }

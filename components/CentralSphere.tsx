@@ -17,7 +17,7 @@ export function CentralSphere() {
 
   return (
     <mesh ref={meshRef} position={[0, 0, 0.18]}>
-      <sphereGeometry args={[0.22, 128, 128]} />
+      <sphereGeometry args={[0.16, 128, 128]} />
       <meshPhysicalMaterial
         color={new THREE.Color(0x020203)}
         metalness={0.88}
