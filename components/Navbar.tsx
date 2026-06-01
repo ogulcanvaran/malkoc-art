@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -39,11 +39,23 @@ export function Navbar() {
   const [mobileOpen,  setMobileOpen]  = useState(false);
   const [megaOpen,    setMegaOpen]    = useState(false);
   const [mobileKol,   setMobileKol]   = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const update = () => {
+      if (headerRef.current) {
+        document.documentElement.style.setProperty('--navbar-h', `${headerRef.current.offsetHeight}px`);
+      }
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, []);
 
   // close mobile menu on resize to desktop
@@ -54,7 +66,9 @@ export function Navbar() {
   }, []);
 
   return (
+    <>
     <header
+      ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         'border-b-[2px] border-[rgba(201,168,76,0.55)]'
       }`}
@@ -81,10 +95,10 @@ export function Navbar() {
 
       {/* ── Main nav ── */}
       <nav
-        className="site-container h-14 grid grid-cols-[1fr_auto_1fr] items-center gap-4"
+        className="site-container h-14 flex items-center justify-between relative"
       >
-        {/* Col 1 — Logo left */}
-        <Link href="/" className="group inline-flex items-center gap-2 justify-self-start">
+        {/* Logo left */}
+        <Link href="/" className="group inline-flex items-center gap-2">
           <span className="text-[16px] font-semibold tracking-[0.22em] uppercase text-white group-hover:text-[#C9A84C] transition-colors duration-300">
             MALKOÇ
           </span>
@@ -93,8 +107,8 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Col 2 — Links center */}
-        <div className="hidden md:flex items-center gap-10">
+        {/* Col 2 — Links center (absolute centered on desktop) */}
+        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10">
           {navLinks.map((link) =>
             link.hasMega ? (
               <div
@@ -130,7 +144,7 @@ export function Navbar() {
                         boxShadow: '0 20px 60px rgba(0,0,0,0.65)',
                       }}
                     >
-                      <div className="flex" style={{ minHeight: '320px' }}>
+                      <div className="flex" style={{ minHeight: '320px', alignItems: 'stretch' }}>
 
                         {/* Col 1 — Kategoriye Göre */}
                         <div className="flex-1 border-r border-[rgba(201,168,76,0.10)]" style={{ padding: '2.5rem 3rem' }}>
@@ -193,11 +207,12 @@ export function Navbar() {
                         </div>
 
                         {/* Col 3 — Fotoğraf kartı */}
-                        <div className="w-[340px] relative overflow-hidden flex-shrink-0">
+                        <div className="w-[340px] relative overflow-hidden flex-shrink-0" style={{ minHeight: '320px' }}>
                           <Link
                             href="/ozel-siparis"
                             onClick={() => setMegaOpen(false)}
                             className="group block w-full h-full relative"
+                            style={{ position: 'absolute', inset: 0 }}
                           >
                             <img
                               src="/images/mega-menu/busemalkocart_balon.webp"
@@ -241,8 +256,8 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Col 3 — CTA + Hamburger right */}
-        <div className="flex items-center justify-end gap-4">
+        {/* CTA + Hamburger right */}
+        <div className="flex items-center gap-4">
           <Link
             href="/ozel-siparis"
             className="hidden md:inline-flex items-center gap-2 text-[10px] tracking-[0.22em] uppercase font-semibold transition-all duration-300 hover:opacity-80"
@@ -281,86 +296,124 @@ export function Navbar() {
       </nav>
 
 
-      {/* ── Mobile menu ── */}
+    </header>
+
+      {/* ── Mobile drawer ── */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden overflow-hidden border-t border-[rgba(201,168,76,0.10)]"
-            style={{ background: 'rgba(10,10,10,0.99)' }}
-          >
-            <div className="px-6 py-6 flex flex-col gap-1">
-              {/* Koleksiyon accordion */}
-              <button
-                onClick={() => setMobileKol((p) => !p)}
-                className="flex items-center justify-between w-full text-[12px] tracking-[0.18em] uppercase py-3 border-b border-[rgba(201,168,76,0.08)] text-[rgba(245,245,240,0.78)]"
-              >
-                Koleksiyon
-                <svg
-                  width="10" height="6" viewBox="0 0 10 6" fill="none"
-                  className={`transition-transform duration-200 ${mobileKol ? 'rotate-180' : ''}`}
-                >
-                  <path d="M1 1L5 5L9 1" stroke="#C9A84C" strokeWidth="1.2" strokeLinecap="round" />
-                </svg>
-              </button>
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed left-0 right-0 bottom-0 z-30 md:hidden"
+              style={{ top: 'var(--navbar-h, 100px)', background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(3px)' }}
+              onClick={() => setMobileOpen(false)}
+            />
+            <motion.div
+              key="drawer"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed right-0 bottom-0 z-40 md:hidden flex flex-col"
+              style={{ top: 'var(--navbar-h, 100px)', width: '80%', maxWidth: '320px', background: '#0D0D0B', borderLeft: '1px solid rgba(201,168,76,0.20)', borderTop: '2px solid #C9A84C' }}
+            >
+              <div className="flex-1 overflow-y-auto flex flex-col" style={{ paddingLeft: '1rem', paddingRight: '1rem', paddingTop: '2rem', paddingBottom: '1rem' }}>
 
-              <AnimatePresence>
-                {mobileKol && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.22 }}
-                    className="overflow-hidden"
+                {/* Kategoriye Göre */}
+                <p style={{ color: 'var(--gold)', fontSize: '13px', letterSpacing: '0.20em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.5rem' }}>
+                  Kategoriye Göre
+                </p>
+                <div style={{ height: '1px', background: 'linear-gradient(90deg, #C9A84C, transparent)', marginBottom: '0.75rem' }} />
+                <div className="flex flex-col" style={{ marginBottom: '2rem', borderBottom: '1px solid rgba(201,168,76,0.08)', paddingBottom: '1.5rem' }}>
+                  {megaItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex flex-col gap-0.5 transition-colors hover:text-[#C9A84C] group"
+                      style={{ paddingBottom: '0.85rem', marginBottom: '0.85rem', borderBottom: '1px solid rgba(201,168,76,0.05)' }}
+                    >
+                      <span className="text-[11px] tracking-[0.12em] uppercase" style={{ color: 'rgba(245,245,240,0.82)' }}>{item.label}</span>
+                      <span className="text-[11px]" style={{ color: 'rgba(245,245,240,0.32)' }}>{item.desc}</span>
+                    </Link>
+                  ))}
+                  <Link
+                    href="/koleksiyon"
+                    onClick={() => setMobileOpen(false)}
+                    className="text-[10px] tracking-[0.15em] uppercase hover:opacity-70 transition-opacity"
+                    style={{ color: '#C9A84C' }}
                   >
-                    <div className="pl-4 pb-2 flex flex-col gap-1">
-                      {megaItems.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          onClick={() => { setMobileOpen(false); setMobileKol(false); }}
-                          className="text-[11px] tracking-[0.15em] uppercase py-2.5 text-[rgba(245,245,240,0.55)] hover:text-[#C9A84C] transition-colors border-b border-[rgba(201,168,76,0.05)]"
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                      <Link
-                        href="/koleksiyon"
-                        onClick={() => { setMobileOpen(false); setMobileKol(false); }}
-                        className="text-[11px] tracking-[0.15em] uppercase py-2.5 text-[#C9A84C] hover:opacity-70 transition-opacity"
-                      >
-                        Tümünü Gör →
-                      </Link>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    Tümünü Gör →
+                  </Link>
+                </div>
 
-              {navLinks.filter((l) => !l.hasMega).map((link) => (
+                {/* Öne Çıkanlar */}
+                <p style={{ color: 'var(--gold)', fontSize: '13px', letterSpacing: '0.20em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.5rem' }}>
+                  Öne Çıkanlar
+                </p>
+                <div style={{ height: '1px', background: 'linear-gradient(90deg, #C9A84C, transparent)', marginBottom: '0.75rem' }} />
+                <div className="flex flex-col" style={{ marginBottom: '2rem', borderBottom: '1px solid rgba(201,168,76,0.08)', paddingBottom: '1.5rem' }}>
+                  {[
+                    { label: 'Yeni Gelenler',        href: '/koleksiyon?sort=yeni' },
+                    { label: 'En Çok İlgi Görenler', href: '/koleksiyon?sort=populer' },
+                    { label: 'Altın Koleksiyon',     href: '/koleksiyon/duvar-sanati' },
+                    { label: 'Siyah & Krom',         href: '/koleksiyon/heykeller' },
+                    { label: 'Kurumsal Projeler',    href: '/ozel-siparis' },
+                  ].map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="text-[11px] tracking-[0.12em] uppercase transition-colors hover:text-[#C9A84C]"
+                      style={{ color: 'rgba(245,245,240,0.82)', paddingBottom: '0.85rem', marginBottom: '0.85rem', borderBottom: '1px solid rgba(201,168,76,0.05)' }}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Diğer nav linkleri */}
+                <p style={{ color: 'var(--gold)', fontSize: '13px', letterSpacing: '0.20em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '0.5rem' }}>
+                  Sayfalar
+                </p>
+                <div style={{ height: '1px', background: 'linear-gradient(90deg, #C9A84C, transparent)', marginBottom: '0.75rem' }} />
+                {navLinks.filter((l) => !l.hasMega).map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-[11px] tracking-[0.12em] uppercase transition-colors hover:text-[#C9A84C]"
+                    style={{ color: 'rgba(245,245,240,0.82)', paddingBottom: '0.85rem', marginBottom: '0.85rem', borderBottom: '1px solid rgba(201,168,76,0.05)' }}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="px-4 pb-8 pt-4" style={{ borderTop: '1px solid rgba(201,168,76,0.10)' }}>
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  href="/ozel-siparis"
                   onClick={() => setMobileOpen(false)}
-                  className="text-[12px] tracking-[0.18em] uppercase py-3 border-b border-[rgba(201,168,76,0.08)] text-[rgba(245,245,240,0.78)] hover:text-[#C9A84C] transition-colors"
+                  className="block text-center uppercase font-semibold transition-all duration-300"
+                  style={{
+                    padding: '1.4rem 1rem',
+                    fontSize: '15px',
+                    letterSpacing: '0.18em',
+                    background: 'linear-gradient(135deg, #E2C97E 0%, #C9A84C 50%, #9A7A30 100%)',
+                    color: '#0A0A0A',
+                  }}
                 >
-                  {link.label}
+                  Özel Sipariş Ver
                 </Link>
-              ))}
-
-              <Link
-                href="/ozel-siparis"
-                onClick={() => setMobileOpen(false)}
-                className="mt-5 text-center py-3.5 text-[11px] tracking-[0.20em] uppercase border border-[rgba(201,168,76,0.50)] text-[#C9A84C] hover:bg-[#C9A84C] hover:text-black transition-all duration-300"
-              >
-                Özel Sipariş
-              </Link>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
