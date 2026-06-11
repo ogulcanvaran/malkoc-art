@@ -1,13 +1,15 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr } from '@react-three/drei';
-import { FluidSurface } from './FluidSurface';
+import { LiquidMetalMaterial } from './LiquidMetalMaterial';
 
 export function Scene() {
   const mousePos = useRef({ x: 0.5, y: 0.5 });
+  const divRef   = useRef<HTMLDivElement>(null);
 
+  // Use window-level listener so it never misses events
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       mousePos.current = {
@@ -20,22 +22,21 @@ export function Scene() {
   }, []);
 
   return (
-    <div className="absolute inset-0 w-full h-full">
+    <div ref={divRef} className="absolute inset-0 w-full h-full">
       <Canvas
-        orthographic
-        camera={{ position: [0, 0, 1], near: 0, far: 2 }}
+        camera={{ position: [0, 0, 1.55], fov: 50, near: 0.1, far: 100 }}
         gl={{
-          antialias:       false, // fullscreen quad'da gerek yok
+          antialias:       true,
           alpha:           false,
           powerPreference: 'high-performance',
           stencil:         false,
           depth:           false,
         }}
-        dpr={[0.85, 1.1]}
+        dpr={[1, 1.5]}
         style={{ background: '#050505' }}
       >
         <AdaptiveDpr pixelated />
-        <FluidSurface mousePos={mousePos} />
+        <LiquidMetalMaterial mousePos={mousePos} />
       </Canvas>
     </div>
   );
