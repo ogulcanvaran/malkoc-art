@@ -82,7 +82,12 @@
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip; /* clip: scroll container oluşturmaz, daha güçlü */
+  max-width: 100%;
+}
 
 body {
   background:              var(--bg);
@@ -93,8 +98,12 @@ body {
   -webkit-font-smoothing:  antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x:              hidden;
+  max-width:               100%;
   transition:              background 0.4s ease, color 0.4s ease;
 }
+
+/* Tüm section'lar yatay overflow'u keser */
+section { overflow-x: clip; }
 
 ::selection { background: rgba(184,148,42,0.18); }
 

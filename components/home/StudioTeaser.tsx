@@ -58,8 +58,8 @@ export function StudioTeaser() {
 
       {/* Metin tarafı */}
       <motion.div
-        initial={{ opacity: 0, x: 30 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 1, ease }}
         className="flex flex-col justify-center px-8 md:px-14 lg:px-20 py-16"

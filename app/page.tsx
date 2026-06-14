@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CollectionStories } from '@/components/home/CollectionStories';
 import { FeaturedWorks }   from '@/components/home/FeaturedWorks';
 import { Categories }      from '@/components/home/Categories';
 import { PhotoStrip }      from '@/components/home/PhotoStrip';
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+      <CollectionStories />
       <FeaturedWorks />
       <Categories />
       <PhotoStrip />
