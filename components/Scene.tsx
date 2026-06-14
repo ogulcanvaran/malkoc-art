@@ -4,6 +4,7 @@ import { useRef, useCallback, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { AdaptiveDpr } from '@react-three/drei';
 import { LiquidMetalMaterial } from './LiquidMetalMaterial';
+import { DiscElement } from './DiscElement';
 
 export function Scene() {
   const mousePos = useRef({ x: 0.5, y: 0.5 });
@@ -37,6 +38,7 @@ export function Scene() {
       >
         <AdaptiveDpr pixelated />
         <LiquidMetalMaterial mousePos={mousePos} />
+        <DiscElement />
       </Canvas>
     </div>
   );

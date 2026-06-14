@@ -9,6 +9,8 @@ uniform float uWarp;
 uniform float uDragMult;
 uniform float uYStretch;
 uniform float uSpread;
+uniform float uPeakRing;
+uniform float uPeakWidth;
 
 varying vec2  vUv;
 varying vec3  vNormal;
@@ -80,8 +82,8 @@ void main() {
   vec2 uvc = vUv - 0.5;
   float edge;
   if (uSpread < 0.5) {
-    // Tek merkez (orijinal)
-    edge = 1.0 - smoothstep(0.38, 0.50, length(uvc));
+    // Tek merkez — CircleGeometry ile tam uyumlu dairesel geçiş
+    edge = 1.0 - smoothstep(0.34, 0.50, length(uvc));
   } else if (uSpread < 1.5) {
     // 3 merkez: sol, sağ, üst-orta
     vec2 c1 = vec2(-0.28, 0.00);
@@ -91,11 +93,26 @@ void main() {
     float f2 = 1.0 - smoothstep(0.20, 0.32, length(uvc - c2));
     float f3 = 1.0 - smoothstep(0.18, 0.30, length(uvc - c3));
     edge = clamp(f1 + f2 + f3, 0.0, 1.0);
-  } else {
+  } else if (uSpread < 2.5) {
     // Tam yüzey — sadece kenar sönümleme
     float ex = 1.0 - smoothstep(0.42, 0.50, abs(uvc.x));
     float ey = 1.0 - smoothstep(0.42, 0.50, abs(uvc.y));
     edge = ex * ey;
+  } else {
+    // 8 dairesel genlik zirvesi — daire boyunca eşit aralıklı
+    float total = 0.0;
+    float w = max(uPeakWidth, 0.04);
+    for (int i = 0; i < 8; i++) {
+      float angle = float(i) * 0.7853981634; // 2*PI/8
+      vec2  center = vec2(cos(angle), sin(angle)) * uPeakRing;
+      float d = length(uvc - center);
+      // Gaussian benzeri yumuşak geçiş — sivri değil dalgalı
+      float g = exp(-d * d / (w * w));
+      total += g;
+    }
+    // Dış kenar fade — geometry sınırından taşmasın
+    float outerFade = 1.0 - smoothstep(0.36, 0.50, length(uvc));
+    edge = clamp(total, 0.0, 1.0) * outerFade;
   }
   elev *= edge;
 
