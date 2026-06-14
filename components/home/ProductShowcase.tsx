@@ -122,27 +122,28 @@ function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Bilgi */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-        <p style={{ fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600 }}>
-          {product.material}
-        </p>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-          <h3 style={{ fontSize: '14px', fontFamily: 'var(--font-display)', color: 'var(--text)', fontWeight: 500, letterSpacing: '0.02em' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', minHeight: '72px', justifyContent: 'space-between' }}>
+        <div>
+          <p style={{ fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.2rem' }}>
+            {product.material}
+          </p>
+          <h3 style={{ fontSize: '13px', fontFamily: 'var(--font-display)', color: 'var(--text)', fontWeight: 500, letterSpacing: '0.02em', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {product.title}
           </h3>
-          <Link
-            href={product.href}
-            style={{
-              fontSize: '9px', letterSpacing: '0.16em', textTransform: 'uppercase',
-              color: 'var(--text-3)', fontWeight: 600, whiteSpace: 'nowrap',
-              transition: 'color 0.2s ease', textDecoration: 'none', flexShrink: 0,
-            }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-3)')}
-          >
-            Ürüne Git →
-          </Link>
         </div>
+        <Link
+          href={product.href}
+          style={{
+            fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase',
+            color: 'var(--text-3)', fontWeight: 600,
+            transition: 'color 0.2s ease', textDecoration: 'none',
+            display: 'inline-block',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-3)')}
+        >
+          Ürüne Git →
+        </Link>
       </div>
     </div>
   );
