@@ -19,8 +19,8 @@ export default function Home() {
   return (
     <>
       <CollectionStories />
-      <FeaturedWorks />
       <ProductShowcase />
+      <FeaturedWorks />
       <Categories />
       <PhotoStrip />
       <StudioTeaser />

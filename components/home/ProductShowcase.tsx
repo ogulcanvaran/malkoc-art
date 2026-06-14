@@ -122,12 +122,12 @@ function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Bilgi */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', minHeight: '72px', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', minHeight: '72px', justifyContent: 'space-between' }} className="product-info">
         <div>
-          <p style={{ fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.2rem' }}>
+          <p style={{ fontSize: '10px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.2rem' }}>
             {product.material}
           </p>
-          <h3 style={{ fontSize: '13px', fontFamily: 'var(--font-display)', color: 'var(--text)', fontWeight: 500, letterSpacing: '0.02em', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <h3 style={{ fontSize: '15px', fontFamily: 'var(--font-display)', color: 'var(--text)', fontWeight: 500, letterSpacing: '0.02em', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {product.title}
           </h3>
         </div>
@@ -135,12 +135,12 @@ function ProductCard({ product }: { product: Product }) {
           href={product.href}
           style={{
             fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase',
-            color: 'var(--text-3)', fontWeight: 600,
+            color: 'var(--text-2)', fontWeight: 700,
             transition: 'color 0.2s ease', textDecoration: 'none',
-            display: 'inline-block',
+            display: 'block', textAlign: 'right',
           }}
           onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-3)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-2)')}
         >
           Ürüne Git →
         </Link>
@@ -153,13 +153,51 @@ export function ProductShowcase() {
   return (
     <section
       aria-label="Ürünler"
-      style={{ background: 'var(--bg)', paddingBlock: 'clamp(4rem, 8vw, 7rem)' }}
+      style={{ background: 'var(--bg)', paddingTop: '0.75rem', paddingBottom: 'clamp(3rem, 6vw, 5rem)' }}
     >
       <style>{`
         /* Mobilde dotlar her zaman görünür, masaüstünde sadece hover'da */
         .product-dots { opacity: 1; }
         @media (hover: hover) {
           .product-dots { opacity: 0; }
+        }
+        /* Mobilde info alanı sıkıştır */
+        @media (max-width: 767px) {
+          .product-info { min-height: unset !important; gap: 0.25rem !important; }
+        }
+        /* Header — masaüstü: iki satır, mobil: tek satır */
+        .showcase-header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.15rem;
+        }
+        .showcase-script {
+          font-family: var(--font-script), cursive;
+          font-size: clamp(1.3rem, 1.8vw, 1.6rem);
+          display: block;
+        }
+        .showcase-title {
+          font-family: var(--font-display);
+          font-size: clamp(2.6rem, 5vw, 4rem);
+          font-weight: 300;
+          line-height: 1.1;
+        }
+        @media (max-width: 767px) {
+          .showcase-header {
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.5rem;
+          }
+          .showcase-script {
+            font-size: 1.9rem;
+          }
+          .showcase-title {
+            font-size: 1.15rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+          }
         }
         .product-grid {
           display: grid;
@@ -172,14 +210,13 @@ export function ProductShowcase() {
       `}</style>
       <div className="site-container">
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 'clamp(2.5rem, 5vw, 4rem)' }}>
-          <span style={{ display: 'block', marginBottom: '0.5rem', fontFamily: 'var(--font-script)', fontSize: 'clamp(1.4rem, 2vw, 1.8rem)' }} className="text-gold-gradient">
-            Koleksiyondan
-          </span>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3.2rem)', color: 'var(--text)', fontWeight: 300 }}>
-            Seçili Eserler
-          </h2>
-          <span className="gold-line" style={{ margin: '1rem auto 0' }} />
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem, 3vw, 2.5rem)' }}>
+          {/* Mobil: tek satır — Masaüstü: iki satır */}
+          <div className="showcase-header">
+            <span className="showcase-script text-gold-gradient">Koleksiyondan</span>
+            <h2 className="showcase-title" style={{ color: 'var(--text)' }}>Seçili Eserler</h2>
+          </div>
+          <span className="gold-line" style={{ margin: '0.6rem auto 0' }} />
         </div>
 
         {/* Grid */}

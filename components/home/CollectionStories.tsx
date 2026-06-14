@@ -176,7 +176,7 @@ export function CollectionStories() {
 
       <section
         aria-label="Koleksiyonlar"
-        style={{ paddingTop: '0.75rem', paddingBottom: 'clamp(2rem, 4vw, 3.5rem)', background: 'var(--bg)' }}
+        style={{ paddingTop: '0.75rem', paddingBottom: '0.5rem', background: 'var(--bg)' }}
       >
         <div className="story-track">
           {stories.map(s => (
