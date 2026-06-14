@@ -33,7 +33,7 @@ export function WhatsAppButton() {
       rel="noopener noreferrer"
       aria-label="WhatsApp ile iletişime geçin"
       className={`
-        fixed bottom-6 right-6 z-50
+        hidden md:flex fixed bottom-6 right-6 z-50
         flex items-center gap-2
         h-14 rounded-full
         bg-[#25D366] text-white

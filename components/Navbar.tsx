@@ -209,12 +209,8 @@ export function Navbar() {
 
             <Link
               href="/ozel-siparis"
-              className="hidden md:inline-flex items-center text-[9px] tracking-[0.22em] uppercase font-semibold transition-all duration-300 hover:brightness-110"
-              style={{
-                padding:    '0.45rem 1.1rem',
-                background: 'linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 60%, var(--gold-deep) 100%)',
-                color:      '#0C0B09',
-              }}
+              className="hidden md:inline-flex items-center text-[11px] tracking-[0.18em] uppercase font-bold transition-all duration-300 hover:brightness-110"
+              style={{ padding: '0.5rem 1.3rem', border: '1.5px solid var(--gold)', color: 'var(--gold)', background: 'var(--bg)', borderRadius: '999px' }}
             >
               Teklif Al
             </Link>
@@ -329,7 +325,7 @@ export function Navbar() {
                 <Link
                   href="/ozel-siparis"
                   onClick={() => setMobileOpen(false)}
-                  className="block text-center text-[10px] tracking-[0.22em] uppercase font-semibold text-[#0C0B09] hover:brightness-110 transition-all py-4"
+                  className="btn-shimmer block text-center text-[10px] tracking-[0.22em] uppercase font-semibold hover:brightness-110 transition-all py-4"
                   style={{ background: 'linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 60%, var(--gold-deep) 100%)' }}
                 >
                   Teklif Al

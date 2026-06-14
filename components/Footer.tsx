@@ -54,15 +54,11 @@ export function Footer() {
           Mekânınız İçin Özel Bir Eser<br />
           <em style={{ color: 'var(--gold)' }}>Tasarlamaya Başlayalım</em>
         </h2>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4" style={{ marginTop: '2.5rem' }}>
           <Link
             href="/ozel-siparis"
-            className="text-[10px] tracking-[0.26em] uppercase font-semibold hover:brightness-110 transition-all duration-300"
-            style={{
-              padding:    '1rem 2.5rem',
-              background: 'linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-deep) 100%)',
-              color:      '#0C0B09',
-            }}
+            className="btn-shimmer text-[11px] tracking-[0.22em] uppercase font-bold hover:brightness-110 transition-all duration-300"
+            style={{ padding: '1rem 2.8rem', borderRadius: '999px' }}
           >
             Teklif Al →
           </Link>
@@ -70,8 +66,8 @@ export function Footer() {
             href="https://wa.me/905000000000?text=Merhaba%2C%20proje%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] tracking-[0.22em] uppercase transition-all duration-300 hover:text-[var(--gold)]"
-            style={{ padding: '1rem 2.5rem', border: '1px solid var(--border-mid)', color: 'var(--text-2)' }}
+            className="text-[11px] tracking-[0.22em] uppercase font-bold transition-all duration-300 hover:text-[var(--gold)] hover:border-[var(--gold)]"
+            style={{ padding: '1rem 2.8rem', border: '1.5px solid var(--border-mid)', color: 'var(--text-2)', borderRadius: '999px' }}
           >
             WhatsApp ile Yazın
           </a>
@@ -91,7 +87,7 @@ export function Footer() {
               >
                 Malkoç Design
               </span>
-              <p className="text-[10px] tracking-[0.22em] uppercase" style={{ color: 'var(--gold)', opacity: 0.6 }}>
+              <p className="text-[10px] tracking-[0.22em] uppercase" style={{ color: 'var(--gold)' }}>
                 Lüks Sanat & İç Mekan Tasarımı
               </p>
             </div>

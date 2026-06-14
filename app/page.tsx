@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { FeaturedWorks }   from '@/components/home/FeaturedWorks';
 import { Categories }      from '@/components/home/Categories';
+import { PhotoStrip }      from '@/components/home/PhotoStrip';
 import { StudioTeaser }    from '@/components/home/StudioTeaser';
 import { BespokeSection }  from '@/components/home/BespokeSection';
 import { NewsletterBanner } from '@/components/NewsletterBanner';
@@ -17,6 +18,7 @@ export default function Home() {
     <>
       <FeaturedWorks />
       <Categories />
+      <PhotoStrip />
       <StudioTeaser />
       <BespokeSection />
       <NewsletterBanner />

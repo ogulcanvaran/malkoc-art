@@ -131,6 +131,28 @@ body {
   background: var(--border);
 }
 
+/* ── Shimmer button ── */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%) skewX(-15deg); }
+}
+
+.btn-shimmer {
+  position:   relative;
+  overflow:   hidden;
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 55%, var(--gold-deep) 100%);
+  color:      #0C0B09;
+}
+
+.btn-shimmer::after {
+  content:    '';
+  position:   absolute;
+  inset:      0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+  transform:  translateX(-100%) skewX(-15deg);
+  animation:  shimmer 2.8s ease-in-out infinite;
+}
+
 /* ── Focus ── */
 :focus-visible { outline: 1.5px solid var(--gold); outline-offset: 3px; }
 

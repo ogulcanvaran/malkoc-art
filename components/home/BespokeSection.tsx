@@ -84,8 +84,8 @@ export function BespokeSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/ozel-siparis"
-              className="w-full sm:w-auto text-center text-[11px] tracking-[0.28em] uppercase font-semibold hover:brightness-110 transition-all duration-300"
-              style={{ padding: '1.2rem 3.2rem', background: 'linear-gradient(135deg, #E8D49A 0%, #C9A84C 55%, #8A6E2C 100%)', color: '#0C0B09', letterSpacing: '0.22em' }}
+              className="btn-shimmer w-full sm:w-auto text-center text-[11px] tracking-[0.28em] uppercase font-semibold hover:brightness-110 transition-all duration-300"
+              style={{ padding: '1.2rem 3.2rem', letterSpacing: '0.22em' }}
             >
               Proje Başlat →
             </Link>
