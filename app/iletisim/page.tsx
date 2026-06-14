@@ -1,29 +1,36 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { ContactForm } from './ContactForm';
+import { Breadcrumb }   from '@/components/Breadcrumb';
+import { ContactForm }  from './ContactForm';
 
 export const metadata: Metadata = {
-  title: 'İletişim',
-  description: 'Malkoç Dizayn ile iletişime geçin. Özel sipariş, kurumsal proje ve koleksiyon hakkında bilgi alın.',
+  title: 'İletişim — Proje Teklifi ve Bilgi',
+  description:
+    'Malkoç Design ile iletişime geçin. Özel sipariş, kurumsal proje teklifi ve koleksiyon hakkında bilgi almak için bize ulaşın. İstanbul.',
   alternates: { canonical: 'https://malkocdizayn.com/iletisim' },
 };
 
 export default function IletisimPage() {
   return (
     <div className="pt-28 min-h-screen" style={{ background: 'var(--black)' }}>
-      <div className="site-container py-16">
-        <nav aria-label="Breadcrumb" className="mb-10">
-          <ol className="flex items-center gap-2 text-[11px] tracking-wider" style={{ color: 'var(--white-muted)' }}>
-            <li><Link href="/" className="hover:text-[#C9A84C] transition-colors">Anasayfa</Link></li>
-            <li style={{ color: 'var(--gold)' }}>›</li>
-            <li style={{ color: 'var(--white)' }}>İletişim</li>
-          </ol>
-        </nav>
-        <div className="text-center mb-16">
-          <span className="block font-script text-2xl mb-3" style={{ fontFamily: 'var(--font-great-vibes)', color: 'var(--gold)' }}>Bize Yazın</span>
-          <h1 className="text-5xl md:text-6xl font-light" style={{ fontFamily: 'var(--font-cormorant)', color: 'var(--white)' }}>İletişim</h1>
-          <span className="gold-line mx-auto mt-5 block" />
+      <div className="site-container py-14">
+        <Breadcrumb items={[{ label: 'İletişim' }]} />
+
+        <div className="text-center mb-14">
+          <span
+            className="block mb-3 text-gold-gradient"
+            style={{ fontFamily: 'var(--font-script)', fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)' }}
+          >
+            Bize Yazın
+          </span>
+          <h1
+            className="font-light mb-5"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', color: 'var(--cream)' }}
+          >
+            İletişim
+          </h1>
+          <span className="gold-line mx-auto block" />
         </div>
+
         <ContactForm />
       </div>
     </div>

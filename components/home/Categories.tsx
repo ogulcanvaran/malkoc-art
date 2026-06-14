@@ -3,41 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-
-const categories = [
-  {
-    title:   'Duvar Sanatı',
-    sub:     'Organik form, premium yüzey',
-    href:    '/koleksiyon/duvar-sanati',
-    src:     'https://picsum.photos/seed/cat1/700/500',
-    alt:     'Lüks duvar sanatı eserleri koleksiyonu — Malkoç Dizayn',
-    span:    'md:col-span-2',
-  },
-  {
-    title:   'Heykeller',
-    sub:     'Üç boyutlu özgün formlar',
-    href:    '/koleksiyon/heykeller',
-    src:     'https://picsum.photos/seed/cat2/500/500',
-    alt:     'Özgün heykel eserleri — Malkoç Dizayn',
-    span:    'md:col-span-1',
-  },
-  {
-    title:   'Lambalar',
-    sub:     'Sanat & ışık bir arada',
-    href:    '/koleksiyon/lambalar',
-    src:     'https://picsum.photos/seed/cat3/500/500',
-    alt:     'Dekoratif lüks lamba heykelleri — Malkoç Dizayn',
-    span:    'md:col-span-1',
-  },
-  {
-    title:   'Özel Üretim',
-    sub:     'Sizin için tasarlandı',
-    href:    '/koleksiyon/ozel-uretim',
-    src:     'https://picsum.photos/seed/cat4/700/500',
-    alt:     'Özel sipariş lüks sanat eseri üretimi — Malkoç Dizayn',
-    span:    'md:col-span-2',
-  },
-];
+import { homeCategories } from '@/lib/images';
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
@@ -45,8 +11,7 @@ export function Categories() {
   return (
     <section
       aria-label="Koleksiyon kategorileri"
-      className="py-24"
-      style={{ background: 'var(--black-surface)' }}
+      style={{ background: 'var(--bg-surface)', paddingBlock: 'clamp(5rem, 10vw, 9rem)' }}
     >
       <div className="site-container">
 
@@ -54,67 +19,81 @@ export function Categories() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.8, ease }}
-          className="flex flex-col items-center text-center mb-16"
+          transition={{ duration: 0.9, ease }}
+          className="flex flex-col items-center text-center mb-12"
         >
           <span
-            className="font-script text-2xl mb-3"
-            style={{ fontFamily: 'var(--font-great-vibes)', color: 'var(--gold)' }}
+            className="mb-3 text-gold-gradient"
+            style={{ fontFamily: 'var(--font-script)', fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)' }}
           >
             Kategoriler
           </span>
           <h2
-            className="text-5xl md:text-6xl font-light"
-            style={{ fontFamily: 'var(--font-cormorant)', color: 'var(--white)' }}
+            className="font-light"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 4.5vw, 4.5rem)', color: 'var(--text)' }}
           >
             Koleksiyonlar
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {categories.map((cat, i) => (
-            <motion.div
-              key={cat.href}
-              className={cat.span}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.7, ease, delay: i * 0.09 }}
-            >
-              <Link href={cat.href} className="group block relative overflow-hidden" style={{ aspectRatio: cat.span.includes('2') ? '16/8' : '1/1' }}>
-                <Image
-                  src={cat.src}
-                  alt={cat.alt}
-                  fill
-                  sizes="(max-width:768px) 100vw, 66vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                {/* Dark overlay */}
-                <div className="absolute inset-0 transition-opacity duration-500" style={{ background: 'linear-gradient(to top, rgba(10,10,10,0.80) 0%, rgba(10,10,10,0.20) 60%, transparent 100%)' }} />
-                {/* Gold hover tint */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400" style={{ background: 'rgba(201,168,76,0.08)' }} />
-                {/* Label */}
-                <div className="absolute bottom-0 left-0 p-6">
-                  <h3
-                    className="text-3xl font-light mb-1"
-                    style={{ fontFamily: 'var(--font-cormorant)', color: 'var(--white)' }}
-                  >
-                    {cat.title}
-                  </h3>
-                  <p className="text-[11px] tracking-[0.15em] uppercase" style={{ color: 'rgba(201,168,76,0.80)' }}>
-                    {cat.sub}
-                  </p>
-                </div>
-                {/* Arrow */}
-                <div
-                  className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0"
-                  style={{ border: '1px solid rgba(201,168,76,0.60)', color: 'var(--gold)' }}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          {homeCategories.map((cat, i) => {
+            const colSpan = cat.wide ? 'sm:col-span-2 md:col-span-2' : 'md:col-span-1';
+            const aspect  = cat.wide ? '16/9' : '3/4';
+
+            return (
+              <motion.div
+                key={cat.href}
+                className={colSpan}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.8, ease, delay: i * 0.08 }}
+              >
+                <Link
+                  href={cat.href}
+                  className="group block relative overflow-hidden"
+                  style={{ aspectRatio: aspect }}
                 >
-                  →
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                  <Image
+                    src={cat.src}
+                    alt={cat.alt}
+                    fill
+                    sizes={cat.wide
+                      ? '(max-width:640px) 100vw, (max-width:768px) 100vw, 66vw'
+                      : '(max-width:640px) 100vw, (max-width:768px) 50vw, 33vw'
+                    }
+                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: 'linear-gradient(to top, rgba(12,11,9,0.85) 0%, rgba(12,11,9,0.12) 55%, transparent 100%)' }}
+                  />
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
+                    style={{ background: 'rgba(184,148,42,0.05)' }}
+                  />
+                  <div className="absolute bottom-0 left-0 p-5 md:p-6">
+                    <h3
+                      className="font-light mb-1"
+                      style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', color: '#F5F0E8' }}
+                    >
+                      {cat.title}
+                    </h3>
+                    <p className="text-[10px] tracking-[0.18em] uppercase" style={{ color: 'rgba(201,168,76,0.80)' }}>
+                      {cat.sub}
+                    </p>
+                  </div>
+                  <div
+                    className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 text-sm"
+                    style={{ border: '1px solid rgba(201,168,76,0.55)', color: '#C9A84C', background: 'rgba(12,11,9,0.70)' }}
+                  >
+                    →
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

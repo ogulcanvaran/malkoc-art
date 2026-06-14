@@ -1,34 +1,138 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════
+   MALKOÇ DESIGN — Warm Architectural Theme System
+   Light (default) + Dark mode
+═══════════════════════════════════════════════════════ */
+
+@theme {
+  --font-display: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-sans:    var(--font-jakarta), 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-script:  var(--font-great-vibes), cursive;
+}
+
+/* ── Light mode (default) ── */
 :root {
-  --background: #050505;
-  --foreground: #ffffff;
+  --bg:          #F7F4EF;
+  --bg-surface:  #EFEBE4;
+  --bg-card:     #E8E3D9;
+  --bg-invert:   #141210;
+
+  --text:        #1A1815;
+  --text-2:      #4A443C;
+  --text-3:      #8A8279;
+
+  --gold:        #B8942A;
+  --gold-light:  #D4AF5E;
+  --gold-deep:   #8A6E20;
+
+  --border:      rgba(26,24,21,0.10);
+  --border-mid:  rgba(26,24,21,0.18);
+  --border-gold: rgba(184,148,42,0.25);
+
+  --shadow-sm:   0 1px 8px rgba(26,24,21,0.08);
+  --shadow-md:   0 4px 24px rgba(26,24,21,0.10);
+  --shadow-lg:   0 8px 48px rgba(26,24,21,0.12);
+
+  /* compat */
+  --white:         #F7F4EF;
+  --black:         #141210;
+  --black-surface: #1A1815;
+  --black-card:    #201E1A;
+  --cream:         #1A1815;
+  --taupe:         #4A443C;
+  --taupe-muted:   #8A8279;
+  --white-muted:   #4A443C;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── Dark mode ── */
+[data-theme="dark"] {
+  --bg:          #141210;
+  --bg-surface:  #1A1815;
+  --bg-card:     #201E1A;
+  --bg-invert:   #F7F4EF;
+
+  --text:        #F5F0E8;
+  --text-2:      #A89F8C;
+  --text-3:      #6B6358;
+
+  --gold:        #C9A84C;
+  --gold-light:  #E8D49A;
+  --gold-deep:   #8A6E2C;
+
+  --border:      rgba(245,240,232,0.08);
+  --border-mid:  rgba(245,240,232,0.14);
+  --border-gold: rgba(201,168,76,0.20);
+
+  --shadow-sm:   0 1px 8px rgba(0,0,0,0.30);
+  --shadow-md:   0 4px 24px rgba(0,0,0,0.40);
+  --shadow-lg:   0 8px 48px rgba(0,0,0,0.55);
+
+  /* compat */
+  --white:         #F5F0E8;
+  --black:         #141210;
+  --black-surface: #1A1815;
+  --black-card:    #201E1A;
+  --cream:         #F5F0E8;
+  --taupe:         #A89F8C;
+  --taupe-muted:   #6B6358;
+  --white-muted:   #A89F8C;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #050505;
-  color: #ffffff;
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  background:              var(--bg);
+  color:                   var(--text);
+  font-family:             var(--font-sans), system-ui, sans-serif;
+  font-size:               15px;
+  line-height:             1.65;
+  -webkit-font-smoothing:  antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x:              hidden;
+  transition:              background 0.4s ease, color 0.4s ease;
 }
 
-::selection {
-  background: rgba(255, 255, 255, 0.15);
+::selection { background: rgba(184,148,42,0.18); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(184,148,42,0.35); border-radius: 2px; }
+
+/* ── Layout ── */
+.site-container {
+  width:           100%;
+  max-width:       1320px;
+  margin-inline:   auto;
+  padding-inline:  clamp(1.25rem, 5vw, 5rem);
 }
+
+/* ── Utility classes ── */
+.text-gold-gradient {
+  background:              linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 60%, var(--gold-deep) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip:         text;
+}
+
+.gold-line {
+  display:    block;
+  width:      40px;
+  height:     1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.section-divider {
+  height:     1px;
+  background: var(--border);
+}
+
+/* ── Focus ── */
+:focus-visible { outline: 1.5px solid var(--gold); outline-offset: 3px; }
+
+/* ── Transitions ── */
+a, button { transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, opacity 0.25s ease, transform 0.25s ease; }

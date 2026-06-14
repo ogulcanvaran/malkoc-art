@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { BespokeForm } from './BespokeForm';
 
 export const metadata: Metadata = {
-  title: 'Özel Sipariş — Mekânınıza Özel Eser',
-  description: 'Malkoç Dizayn ile mekânınıza özel lüks sanat eseri siparişi verin. Boyut, renk ve malzeme seçimi tamamen size özel.',
+  title: 'Özel Sipariş — Mekânınıza Özel Sanat Eseri',
+  description: 'Malkoç Design ile mekânınıza özel lüks sanat eseri siparişi verin. Boyut, renk, malzeme ve form tamamen size özel tasarlanır. İstanbul.',
   alternates: { canonical: 'https://malkocdizayn.com/ozel-siparis' },
 };
 
