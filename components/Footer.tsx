@@ -37,30 +37,49 @@ export function Footer() {
     >
       {/* CTA Band */}
       <div
-        className="text-center"
         style={{
           padding:      'clamp(3rem, 6vw, 5rem) clamp(1.25rem, 5vw, 6rem)',
           borderBottom: '1px solid var(--border)',
           background:   'var(--bg-card)',
+          display:      'flex',
+          flexDirection: 'column',
+          alignItems:   'center',
+          textAlign:    'center',
         }}
       >
-        <p className="text-[11px] tracking-[0.30em] uppercase mb-4" style={{ color: 'var(--gold)' }}>
+        <p style={{ fontSize: '11px', letterSpacing: '0.30em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 700, marginBottom: '1rem' }}>
           Projenizi Hayata Geçirelim
         </p>
         <h2
-          className="font-light leading-tight mb-8"
-          style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: 'var(--text)' }}
+          className="font-light leading-tight"
+          style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: 'var(--text)', marginBottom: '1.75rem' }}
         >
-          Mekânınız İçin Özel Bir Eser<br />
-          <em style={{ color: 'var(--gold)' }}>Tasarlamaya Başlayalım</em>
+          Mekânınıza Özel Tasarım<br />
+          <em style={{ color: 'var(--gold)' }}>Talep Edin</em>
         </h2>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4" style={{ marginTop: '2.5rem' }}>
+
+        {/* Maddeler */}
+        <ul style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.6rem 2rem', marginBottom: '2.5rem', listStyle: 'none', padding: 0 }}>
+          {[
+            'Ücretsiz Ön Görüşme',
+            'Özel Ölçülendirme',
+            'Türkiye Geneli Uygulama',
+            '48 Saat İçinde Dönüş',
+          ].map(item => (
+            <li key={item} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '12px', color: 'var(--text-2)', letterSpacing: '0.04em' }}>
+              <span style={{ color: 'var(--gold)', fontSize: '14px', lineHeight: 1 }}>✓</span>
+              {item}
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/ozel-siparis"
             className="btn-shimmer text-[11px] tracking-[0.22em] uppercase font-bold hover:brightness-110 transition-all duration-300"
             style={{ padding: '1rem 2.8rem', borderRadius: '999px' }}
           >
-            Teklif Al →
+            Projemi Anlat →
           </Link>
           <a
             href="https://wa.me/905000000000?text=Merhaba%2C%20proje%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum."

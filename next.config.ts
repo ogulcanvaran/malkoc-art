@@ -3,22 +3,17 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   images: {
     qualities: [75, 85, 90],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
   },
-  turbopack: {
-    rules: {
-      '*.glsl': {
-        loaders: ['raw-loader'],
-        as: '*.js',
-      },
-      '*.vert': {
-        loaders: ['raw-loader'],
-        as: '*.js',
-      },
-      '*.frag': {
-        loaders: ['raw-loader'],
-        as: '*.js',
-      },
-    },
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.watchOptions = {
+        poll:        30000, // 30 saniyede bir kontrol
+        aggregateTimeout: 500,
+        ignored:     /node_modules|public\/busemalkocart/,
+      };
+    }
+    return config;
   },
 };
 

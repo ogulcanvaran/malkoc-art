@@ -11,6 +11,7 @@ export type ImageItem = {
   alt:      string;
   category: 'duvar-sanati' | 'heykel' | 'lamba' | 'ozel-uretim' | 'studyo' | 'detay';
   featured?: boolean;
+  mekan?:   'salon' | 'villa' | 'lobby' | 'ofis' | 'restoran';
 };
 
 export const images: ImageItem[] = [
@@ -97,11 +98,13 @@ export const images: ImageItem[] = [
     alt:      'Premium duvar sanatı uygulaması, iç mekan — Malkoç Design İstanbul',
     category: 'ozel-uretim',
     featured: true,
+    mekan:    'salon',
   },
   {
     src:      `${BASE}/busemalkocart_1770558808_3828045420031701866_75789262008.jpg`,
     alt:      'Özel üretim dekoratif panel, mekân uygulaması — Malkoç Design',
     category: 'ozel-uretim',
+    mekan:    'salon',
   },
   {
     src:      `${BASE}/busemalkocart_1770558808_3828045429108173592_75789262008.jpg`,
@@ -133,11 +136,13 @@ export const images: ImageItem[] = [
     alt:      'Özel üretim duvar sanatı — kurumsal mekân uygulaması, Malkoç Design',
     category: 'ozel-uretim',
     featured: true,
+    mekan:    'ofis',
   },
   {
     src:      `${BASE}/busemalkocart_1772630492_3845425162858838651_75789262008.jpg`,
     alt:      'Kurumsal dekorasyon uygulaması, lüks ofis — Malkoç Design',
     category: 'ozel-uretim',
+    mekan:    'ofis',
   },
   {
     src:      `${BASE}/busemalkocart_1776428976_3877288932304288615_75789262008.jpg`,
@@ -158,6 +163,7 @@ export const images: ImageItem[] = [
     src:      `${BASE}/busemalkocart_1776720489_3879735123755439904_75789262008.jpg`,
     alt:      'Özgün form sanat eseri, mekân uygulaması — Malkoç Design',
     category: 'ozel-uretim',
+    mekan:    'lobby',
   },
   {
     src:      `${BASE}/busemalkocart_1777387018_3885326370507389888_75789262008.jpg`,
@@ -215,6 +221,7 @@ export const images: ImageItem[] = [
     src:      `${BASE}/busemalkocart_1780345266_3910140784630931182_75789262008.jpg`,
     alt:      'Premium dekoratif panel, kurumsal uygulama — Malkoç Design',
     category: 'ozel-uretim',
+    mekan:    'restoran',
   },
   {
     src:      `${BASE}/busemalkocart_1780480165_3911271320468371684_75789262008.jpg`,
@@ -230,6 +237,7 @@ export const images: ImageItem[] = [
     src:      `${BASE}/busemalkocart_1780480165_3911271325359000448_75789262008.jpg`,
     alt:      'Premium sanat eseri, iç mekan dekorasyon — Malkoç Design İstanbul',
     category: 'ozel-uretim',
+    mekan:    'villa',
   },
   {
     src:      `${BASE}/busemalkocart_1780934971_3915085459666075323_75789262008.jpg`,
@@ -251,6 +259,7 @@ export const images: ImageItem[] = [
     alt:      'Premium duvar sanatı mekân uygulaması — Malkoç Design İstanbul',
     category: 'ozel-uretim',
     featured: true,
+    mekan:    'villa',
   },
   {
     src:      `${BASE}/busemalkocart_1776425773_3877262269071804406_75789262008.jpg`,
