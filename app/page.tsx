@@ -1,12 +1,7 @@
 import type { Metadata } from 'next';
 import { CollectionStories }  from '@/components/home/CollectionStories';
-import { FeaturedWorks }    from '@/components/home/FeaturedWorks';
 import { ProductShowcase }  from '@/components/home/ProductShowcase';
-import { Categories }      from '@/components/home/Categories';
 import { PhotoStrip }      from '@/components/home/PhotoStrip';
-import { StudioTeaser }    from '@/components/home/StudioTeaser';
-import { BespokeSection }  from '@/components/home/BespokeSection';
-import { NewsletterBanner } from '@/components/NewsletterBanner';
 
 export const metadata: Metadata = {
   title: 'Malkoç Design | İstanbul Lüks Duvar Sanatı & Özel Üretim',
@@ -20,12 +15,7 @@ export default function Home() {
     <>
       <CollectionStories />
       <ProductShowcase />
-      <FeaturedWorks />
-      <Categories />
       <PhotoStrip />
-      <StudioTeaser />
-      <BespokeSection />
-      <NewsletterBanner />
     </>
   );
 }
