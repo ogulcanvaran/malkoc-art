@@ -78,7 +78,7 @@ export function Navbar() {
         }}
       >
         {/* Üst bar */}
-        <div className="text-center py-2" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="text-center py-2" style={{ borderBottom: '1px solid var(--border)', paddingTop: '0.6rem' }}>
           <Link href="/" className="inline-block">
             <span
               className="text-gold-gradient"

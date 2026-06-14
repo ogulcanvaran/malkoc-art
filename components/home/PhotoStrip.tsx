@@ -11,7 +11,7 @@ const stripImages = [
   images[14], images[16], images[18], images[20],
 ].filter(Boolean);
 
-const ITEM_WIDTH  = 220; // px
+const ITEM_WIDTH  = 260; // px
 const ITEM_GAP    = 12;  // px
 const SPEED       = 0.4; // px per frame — çok yavaş
 
@@ -23,7 +23,44 @@ export function PhotoStrip() {
   const pauseRef   = useRef(false);
   const [, forceRender] = useState(0);
 
+  const sliderRef = useRef<HTMLDivElement>(null);
   const totalW = (ITEM_WIDTH + ITEM_GAP) * stripImages.length;
+
+  /* Touch olaylarını passive:false ile bağla — preventDefault çalışsın */
+  useEffect(() => {
+    const el = sliderRef.current;
+    if (!el) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      pauseRef.current = true;
+      dragRef.current = { active: true, startX: e.touches[0].clientX, startPos: posRef.current };
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!dragRef.current.active) return;
+      const deltaX = e.touches[0].clientX - dragRef.current.startX;
+      const deltaY = e.touches[0].clientY - (e.touches[0].clientY); // direction check
+      e.preventDefault(); // dikey scroll'u engelle
+      posRef.current = dragRef.current.startPos + deltaX;
+      if (trackRef.current)
+        trackRef.current.style.transform = `translateX(${posRef.current}px)`;
+    };
+
+    const handleTouchEnd = () => {
+      dragRef.current.active = false;
+      pauseRef.current = false;
+    };
+
+    el.addEventListener('touchstart', handleTouchStart, { passive: true });
+    el.addEventListener('touchmove',  handleTouchMove,  { passive: false });
+    el.addEventListener('touchend',   handleTouchEnd,   { passive: true });
+
+    return () => {
+      el.removeEventListener('touchstart', handleTouchStart);
+      el.removeEventListener('touchmove',  handleTouchMove);
+      el.removeEventListener('touchend',   handleTouchEnd);
+    };
+  }, []);
 
   /* Auto-scroll loop */
   useEffect(() => {
@@ -59,24 +96,6 @@ export function PhotoStrip() {
     pauseRef.current = false;
   };
 
-  /* --- Touch drag --- */
-  const onTouchStart = (e: React.TouchEvent) => {
-    pauseRef.current = true;
-    dragRef.current  = { active: true, startX: e.touches[0].clientX, startPos: posRef.current };
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!dragRef.current.active) return;
-    const delta = e.touches[0].clientX - dragRef.current.startX;
-    posRef.current = dragRef.current.startPos + delta;
-    if (trackRef.current)
-      trackRef.current.style.transform = `translateX(${posRef.current}px)`;
-  };
-
-  const onTouchEnd = () => {
-    dragRef.current.active = false;
-    pauseRef.current = false;
-  };
 
   /* Doubled for seamless loop */
   const doubled = [...stripImages, ...stripImages];
@@ -96,7 +115,7 @@ export function PhotoStrip() {
         </span>
         <h2
           className="font-light mb-4"
-          style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3.5rem)', color: 'var(--text)' }}
+          style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', color: 'var(--text)', fontWeight: 500 }}
         >
           Her Eser Bir Hikâye
         </h2>
@@ -111,16 +130,14 @@ export function PhotoStrip() {
         <div className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none" style={{ width: 'clamp(30px, 8vw, 160px)', background: 'linear-gradient(to left, var(--bg-surface) 0%, transparent 100%)' }} />
 
       <div
+        ref={sliderRef}
         className="overflow-hidden select-none"
         style={{ cursor: 'grab' }}
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
-      onMouseLeave={onMouseUp}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+      >
       <div
         ref={trackRef}
         className="flex will-change-transform"
@@ -130,13 +147,13 @@ export function PhotoStrip() {
           <div
             key={i}
             className="relative flex-shrink-0 overflow-hidden"
-            style={{ width: `${ITEM_WIDTH}px`, aspectRatio: '2/3' }}
+            style={{ width: `${ITEM_WIDTH}px`, aspectRatio: '3/4' }}
           >
             <Image
               src={img.src}
               alt={img.alt}
               fill
-              sizes="220px"
+              sizes="260px"
               className="object-cover pointer-events-none"
               draggable={false}
             />

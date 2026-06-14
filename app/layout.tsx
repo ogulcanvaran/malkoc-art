@@ -68,7 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <SchemaOrg />
           <Navbar />
-          <main>{children}</main>
+          <main style={{ paddingTop: 'var(--navbar-h, 90px)' }}>{children}</main>
           <Footer />
           <WhatsAppButton />
           <StickyCtaBar />
