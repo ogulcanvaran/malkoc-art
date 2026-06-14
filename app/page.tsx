@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { CollectionStories } from '@/components/home/CollectionStories';
-import { FeaturedWorks }   from '@/components/home/FeaturedWorks';
+import { CollectionStories }  from '@/components/home/CollectionStories';
+import { FeaturedWorks }    from '@/components/home/FeaturedWorks';
+import { ProductShowcase }  from '@/components/home/ProductShowcase';
 import { Categories }      from '@/components/home/Categories';
 import { PhotoStrip }      from '@/components/home/PhotoStrip';
 import { StudioTeaser }    from '@/components/home/StudioTeaser';
@@ -19,6 +20,7 @@ export default function Home() {
     <>
       <CollectionStories />
       <FeaturedWorks />
+      <ProductShowcase />
       <Categories />
       <PhotoStrip />
       <StudioTeaser />
